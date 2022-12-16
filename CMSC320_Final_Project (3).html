@@ -1,0 +1,3827 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>200883</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="cell markdown" id="wU4OsK_AQDLR">
+<p>#Analysis of different Major League Baseball player salaries</p>
+<p>By: Austin Kaminow and Joshua Leeman</p>
+</div>
+<section id="introduction--motivation" class="cell markdown" id="p33egwatPzDR">
+<h1>Introduction / Motivation</h1>
+<p>Anybody who looks at the current salaries of the highest paid baseball players these days is immediately in awe. Max Scherzer recently set a record, making over 43 million dollars per year. Several players are making over 30 million, and over 50 MLB players are making at least 20 million dollars per year. Our work is an exploration into these salaries, seeing how much players really deserve such salaries. We will compare players to one another, taking note of how well they perform compared to other players, and how much money they make compared to other players. To learn more about the highest paid baseball players today, please look at <a href="https://www.nbcsports.com/washington/nationals/here-are-highest-paid-mlb-players-2022-season" class="uri">https://www.nbcsports.com/washington/nationals/here-are-highest-paid-mlb-players-2022-season</a>. <br><br> In this project, we will look both at batters and pitchers, comparing batters' salaries to other batters' salaries, and doing the same for pitchers. Our null hypothesis is that a player's performances has no affect on his salary. We hope to reject this null hypothesis, showing that there is indeed a correlation between these high-paid baseball players and their actual performace throughout the season.</p>
+</section>
+<section id="data-collection" class="cell markdown" id="qrxm0wuPS-R7">
+<h1>Data Collection</h1>
+<p>In this section, we will collect data for the batters and pitchers. In order to get all of the information we need for each player, we will also need to gather information from the salaries data table. We will then combine the salaries with the batters as well as with pitchers in order to view each player and their salary in the same dataframe. <br><br> In this first section, we begin by gathering the data from these data sets, and limiting them to the years between 1985 and 2016. Unfortunately, we were not able to find salary data that went beyond the year 2016.</p>
+</section>
+<div class="cell code" data-execution_count="1" data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="C6ps3H3Y53_z" data-outputId="011a9ef6-4b0f-4134-e313-53faf772f3f9">
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Imports</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="im">import</span> datetime</span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># Gathering csv files and condensing to the 22 years between 1985 and 2016</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>data_batting <span class="op">=</span> pd.read_csv(<span class="st">&quot;Batting.csv&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9"></a>data_batting <span class="op">=</span> data_batting[data_batting.yearID <span class="op">&gt;=</span> <span class="dv">1985</span>][data_batting.yearID <span class="op">&lt;=</span> <span class="dv">2016</span>]</span>
+<span id="cb1-10"><a href="#cb1-10"></a></span>
+<span id="cb1-11"><a href="#cb1-11"></a>data_pitching <span class="op">=</span> pd.read_csv(<span class="st">&quot;Pitching.csv&quot;</span>)</span>
+<span id="cb1-12"><a href="#cb1-12"></a>data_pitching <span class="op">=</span> data_pitching[data_pitching.yearID <span class="op">&gt;=</span> <span class="dv">1985</span>][data_pitching.yearID <span class="op">&lt;=</span> <span class="dv">2016</span>]</span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a>data_salaries <span class="op">=</span> pd.read_csv(<span class="st">&quot;Salaries.csv&quot;</span>)</span>
+<span id="cb1-15"><a href="#cb1-15"></a>data_salaries <span class="op">=</span> data_salaries[data_salaries.yearID <span class="op">&gt;=</span> <span class="dv">1985</span>][data_salaries.yearID <span class="op">&lt;=</span> <span class="dv">2016</span>]</span>
+<span id="cb1-16"><a href="#cb1-16"></a></span>
+<span id="cb1-17"><a href="#cb1-17"></a>data_people <span class="op">=</span> pd.read_csv(<span class="st">&quot;People.csv&quot;</span>)</span>
+<span id="cb1-18"><a href="#cb1-18"></a></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="co"># Condense the data to only include players playing between 1985 and 2016</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>data_people <span class="op">=</span> data_people.dropna(subset <span class="op">=</span> [<span class="st">&#39;debut&#39;</span>])</span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="kw">def</span> check_career(row) :</span>
+<span id="cb1-22"><a href="#cb1-22"></a>  <span class="cf">if</span> <span class="bu">int</span>(<span class="bu">str</span>(row[<span class="st">&#39;finalGame&#39;</span>])[:<span class="dv">4</span>]) <span class="op">&lt;=</span> <span class="dv">1985</span> <span class="kw">or</span> <span class="bu">int</span>(<span class="bu">str</span>(row[<span class="st">&#39;debut&#39;</span>])[:<span class="dv">4</span>]) <span class="op">&gt;=</span> <span class="dv">2016</span>:</span>
+<span id="cb1-23"><a href="#cb1-23"></a>    <span class="cf">return</span> <span class="st">&#39;no&#39;</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a>  <span class="cf">return</span> <span class="st">&#39;yes&#39;</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a></span>
+<span id="cb1-26"><a href="#cb1-26"></a>data_people[<span class="st">&#39;career&#39;</span>] <span class="op">=</span> data_people.<span class="bu">apply</span> (<span class="kw">lambda</span> row: check_career(row), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-27"><a href="#cb1-27"></a>data_people <span class="op">=</span> data_people[data_people[<span class="st">&#39;career&#39;</span>] <span class="op">==</span> <span class="st">&#39;yes&#39;</span>]</span>
+<span id="cb1-28"><a href="#cb1-28"></a></span>
+<span id="cb1-29"><a href="#cb1-29"></a><span class="co">#Drop unnecessary columns from the people dataframe</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a>data_people <span class="op">=</span> data_people.drop([<span class="st">&#39;birthYear&#39;</span>, <span class="st">&#39;birthMonth&#39;</span>, <span class="st">&#39;birthDay&#39;</span>, </span>
+<span id="cb1-31"><a href="#cb1-31"></a>                                <span class="st">&#39;birthCountry&#39;</span>, <span class="st">&#39;birthState&#39;</span>, <span class="st">&#39;birthCity&#39;</span>, <span class="st">&#39;deathYear&#39;</span>, <span class="st">&#39;deathMonth&#39;</span>, <span class="st">&#39;deathDay&#39;</span>, </span>
+<span id="cb1-32"><a href="#cb1-32"></a>                                <span class="st">&#39;deathCountry&#39;</span>, <span class="st">&#39;deathState&#39;</span>, <span class="st">&#39;deathCity&#39;</span>, <span class="st">&#39;weight&#39;</span>, <span class="st">&#39;height&#39;</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-33"><a href="#cb1-33"></a>data_people <span class="op">=</span> data_people.reset_index()</span></code></pre></div>
+<div class="output stream stderr">
+<pre><code>&lt;ipython-input-1-5ca85491da51&gt;:9: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  data_batting = data_batting[data_batting.yearID &gt;= 1985][data_batting.yearID &lt;= 2016]
+&lt;ipython-input-1-5ca85491da51&gt;:12: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+  data_pitching = data_pitching[data_pitching.yearID &gt;= 1985][data_pitching.yearID &lt;= 2016]
+</code></pre>
+</div>
+</div>
+<div class="cell markdown" id="DbzLdokrUwC8">
+<p>Below, we are going to show the first few rows of the dataframes we will be working with throughout this project. The order these are shown is: <br> 1) Batting <br> 2) Pitching <br> 3) Salaries <br> 4) People</p>
+</div>
+<div class="cell code" data-execution_count="2" data-colab="{&quot;height&quot;:392,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="AL4dZ5l0W8kK" data-outputId="719adc82-0054-4027-add7-ae55532be503">
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>data_batting.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="2">
+
+  <div id="df-00521894-cdc3-47b7-b2b4-4c3ebc4a2797">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>playerID</th>
+      <th>yearID</th>
+      <th>stint</th>
+      <th>teamID</th>
+      <th>lgID</th>
+      <th>G</th>
+      <th>AB</th>
+      <th>R</th>
+      <th>H</th>
+      <th>2B</th>
+      <th>...</th>
+      <th>RBI</th>
+      <th>SB</th>
+      <th>CS</th>
+      <th>BB</th>
+      <th>SO</th>
+      <th>IBB</th>
+      <th>HBP</th>
+      <th>SH</th>
+      <th>SF</th>
+      <th>GIDP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>62254</th>
+      <td>aasedo01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>BAL</td>
+      <td>AL</td>
+      <td>54</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62255</th>
+      <td>abregjo01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>CHN</td>
+      <td>NL</td>
+      <td>6</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62256</th>
+      <td>ackerji01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>61</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62257</th>
+      <td>adamsri02</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>SFN</td>
+      <td>NL</td>
+      <td>54</td>
+      <td>121</td>
+      <td>12</td>
+      <td>23</td>
+      <td>3</td>
+      <td>...</td>
+      <td>10.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>5</td>
+      <td>23.0</td>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>62258</th>
+      <td>agostju01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>CHA</td>
+      <td>AL</td>
+      <td>54</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62259</th>
+      <td>aguaylu01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>91</td>
+      <td>165</td>
+      <td>27</td>
+      <td>46</td>
+      <td>7</td>
+      <td>...</td>
+      <td>21.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>22</td>
+      <td>26.0</td>
+      <td>5.0</td>
+      <td>6.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>62260</th>
+      <td>aguilri01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>NYN</td>
+      <td>NL</td>
+      <td>22</td>
+      <td>36</td>
+      <td>1</td>
+      <td>10</td>
+      <td>2</td>
+      <td>...</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>7.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>62261</th>
+      <td>aikenwi01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>12</td>
+      <td>20</td>
+      <td>2</td>
+      <td>4</td>
+      <td>1</td>
+      <td>...</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>3</td>
+      <td>6.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>62262</th>
+      <td>alexado01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>36</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62263</th>
+      <td>allenga01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>14</td>
+      <td>34</td>
+      <td>2</td>
+      <td>4</td>
+      <td>1</td>
+      <td>...</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 22 columns</p>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-00521894-cdc3-47b7-b2b4-4c3ebc4a2797')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-00521894-cdc3-47b7-b2b4-4c3ebc4a2797 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-00521894-cdc3-47b7-b2b4-4c3ebc4a2797');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  
+</div>
+</div>
+<div class="cell code" data-execution_count="3" data-colab="{&quot;height&quot;:392,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="pYJ8HcYOnNag" data-outputId="8504a5f8-8f12-4e7d-ef7d-02e83bf52444">
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>data_pitching.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="3">
+
+  <div id="df-4e73cb79-c55d-48ab-954c-9db67a5b9da0">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>playerID</th>
+      <th>yearID</th>
+      <th>stint</th>
+      <th>teamID</th>
+      <th>lgID</th>
+      <th>W</th>
+      <th>L</th>
+      <th>G</th>
+      <th>GS</th>
+      <th>CG</th>
+      <th>...</th>
+      <th>IBB</th>
+      <th>WP</th>
+      <th>HBP</th>
+      <th>BK</th>
+      <th>BFP</th>
+      <th>GF</th>
+      <th>R</th>
+      <th>SH</th>
+      <th>SF</th>
+      <th>GIDP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>24984</th>
+      <td>aasedo01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>BAL</td>
+      <td>AL</td>
+      <td>10</td>
+      <td>6</td>
+      <td>54</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>7.0</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>366.0</td>
+      <td>43</td>
+      <td>44</td>
+      <td>5.0</td>
+      <td>3.0</td>
+      <td>13.0</td>
+    </tr>
+    <tr>
+      <th>24985</th>
+      <td>abregjo01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>CHN</td>
+      <td>NL</td>
+      <td>1</td>
+      <td>1</td>
+      <td>6</td>
+      <td>5</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>109.0</td>
+      <td>0</td>
+      <td>18</td>
+      <td>5.0</td>
+      <td>1.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>24986</th>
+      <td>ackerji01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>7</td>
+      <td>2</td>
+      <td>61</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>0</td>
+      <td>370.0</td>
+      <td>26</td>
+      <td>35</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>16.0</td>
+    </tr>
+    <tr>
+      <th>24987</th>
+      <td>agostju01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>CHA</td>
+      <td>AL</td>
+      <td>4</td>
+      <td>3</td>
+      <td>54</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1.0</td>
+      <td>0</td>
+      <td>3.0</td>
+      <td>0</td>
+      <td>246.0</td>
+      <td>21</td>
+      <td>27</td>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>24988</th>
+      <td>aguilri01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>NYN</td>
+      <td>NL</td>
+      <td>10</td>
+      <td>7</td>
+      <td>21</td>
+      <td>19</td>
+      <td>2</td>
+      <td>...</td>
+      <td>2.0</td>
+      <td>5</td>
+      <td>2.0</td>
+      <td>2</td>
+      <td>507.0</td>
+      <td>1</td>
+      <td>49</td>
+      <td>7.0</td>
+      <td>4.0</td>
+      <td>8.0</td>
+    </tr>
+    <tr>
+      <th>24989</th>
+      <td>alexado01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>17</td>
+      <td>10</td>
+      <td>36</td>
+      <td>36</td>
+      <td>6</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>9</td>
+      <td>6.0</td>
+      <td>0</td>
+      <td>1090.0</td>
+      <td>0</td>
+      <td>105</td>
+      <td>6.0</td>
+      <td>3.0</td>
+      <td>15.0</td>
+    </tr>
+    <tr>
+      <th>24990</th>
+      <td>allenne01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>SLN</td>
+      <td>NL</td>
+      <td>1</td>
+      <td>4</td>
+      <td>23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>6.0</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>135.0</td>
+      <td>13</td>
+      <td>22</td>
+      <td>1.0</td>
+      <td>3.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>24991</th>
+      <td>allenne01</td>
+      <td>1985</td>
+      <td>2</td>
+      <td>NYA</td>
+      <td>AL</td>
+      <td>1</td>
+      <td>0</td>
+      <td>17</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>124.0</td>
+      <td>10</td>
+      <td>9</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>24992</th>
+      <td>anderla02</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>3</td>
+      <td>3</td>
+      <td>57</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>4.0</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>1</td>
+      <td>318.0</td>
+      <td>19</td>
+      <td>41</td>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>24993</th>
+      <td>andujjo01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>SLN</td>
+      <td>NL</td>
+      <td>21</td>
+      <td>12</td>
+      <td>38</td>
+      <td>38</td>
+      <td>10</td>
+      <td>...</td>
+      <td>12.0</td>
+      <td>2</td>
+      <td>11.0</td>
+      <td>0</td>
+      <td>1127.0</td>
+      <td>0</td>
+      <td>113</td>
+      <td>11.0</td>
+      <td>4.0</td>
+      <td>32.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 30 columns</p>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-4e73cb79-c55d-48ab-954c-9db67a5b9da0')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-4e73cb79-c55d-48ab-954c-9db67a5b9da0 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-4e73cb79-c55d-48ab-954c-9db67a5b9da0');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  
+</div>
+</div>
+<div class="cell code" data-execution_count="4" data-colab="{&quot;height&quot;:363,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="fbMytlHYnNig" data-outputId="4cd4e6a0-337c-413b-ec70-961d33b918ad">
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>data_salaries.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="4">
+
+  <div id="df-4fd7683c-40ec-4d2a-91d1-d214bc005d91">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>yearID</th>
+      <th>teamID</th>
+      <th>lgID</th>
+      <th>playerID</th>
+      <th>salary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>barkele01</td>
+      <td>870000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>bedrost01</td>
+      <td>550000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>benedbr01</td>
+      <td>545000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>campri01</td>
+      <td>633333</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>ceronri01</td>
+      <td>625000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>chambch01</td>
+      <td>800000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>dedmoje01</td>
+      <td>150000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>forstte01</td>
+      <td>483333</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>garbege01</td>
+      <td>772000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1985</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>harpete01</td>
+      <td>250000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-4fd7683c-40ec-4d2a-91d1-d214bc005d91')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-4fd7683c-40ec-4d2a-91d1-d214bc005d91 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-4fd7683c-40ec-4d2a-91d1-d214bc005d91');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  
+</div>
+</div>
+<div class="cell code" data-execution_count="5" data-colab="{&quot;height&quot;:363,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="0HMjg_crnNmO" data-outputId="25b55c9c-1a3a-4ec9-d37b-f968007742ab">
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>data_people.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="5">
+
+  <div id="df-75bbd526-00b7-4dab-b4ab-fd8e339885fc">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>playerID</th>
+      <th>nameFirst</th>
+      <th>nameLast</th>
+      <th>nameGiven</th>
+      <th>bats</th>
+      <th>throws</th>
+      <th>debut</th>
+      <th>finalGame</th>
+      <th>retroID</th>
+      <th>bbrefID</th>
+      <th>career</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>aardsda01</td>
+      <td>David</td>
+      <td>Aardsma</td>
+      <td>David Allan</td>
+      <td>R</td>
+      <td>R</td>
+      <td>2004-04-06</td>
+      <td>2015-08-23</td>
+      <td>aardd001</td>
+      <td>aardsda01</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>aasedo01</td>
+      <td>Don</td>
+      <td>Aase</td>
+      <td>Donald William</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1977-07-26</td>
+      <td>1990-10-03</td>
+      <td>aased001</td>
+      <td>aasedo01</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4</td>
+      <td>abadan01</td>
+      <td>Andy</td>
+      <td>Abad</td>
+      <td>Fausto Andres</td>
+      <td>L</td>
+      <td>L</td>
+      <td>2001-09-10</td>
+      <td>2006-04-13</td>
+      <td>abada001</td>
+      <td>abadan01</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>5</td>
+      <td>abadfe01</td>
+      <td>Fernando</td>
+      <td>Abad</td>
+      <td>Fernando Antonio</td>
+      <td>L</td>
+      <td>L</td>
+      <td>2010-07-28</td>
+      <td>2021-10-01</td>
+      <td>abadf001</td>
+      <td>abadfe01</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>14</td>
+      <td>abbotje01</td>
+      <td>Jeff</td>
+      <td>Abbott</td>
+      <td>Jeffrey William</td>
+      <td>R</td>
+      <td>L</td>
+      <td>1997-06-10</td>
+      <td>2001-09-29</td>
+      <td>abboj002</td>
+      <td>abbotje01</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>15</td>
+      <td>abbotji01</td>
+      <td>Jim</td>
+      <td>Abbott</td>
+      <td>James Anthony</td>
+      <td>L</td>
+      <td>L</td>
+      <td>1989-04-08</td>
+      <td>1999-07-21</td>
+      <td>abboj001</td>
+      <td>abbotji01</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>16</td>
+      <td>abbotku01</td>
+      <td>Kurt</td>
+      <td>Abbott</td>
+      <td>Kurt Thomas</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1993-09-07</td>
+      <td>2001-04-13</td>
+      <td>abbok002</td>
+      <td>abbotku01</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>17</td>
+      <td>abbotky01</td>
+      <td>Kyle</td>
+      <td>Abbott</td>
+      <td>Lawrence Kyle</td>
+      <td>L</td>
+      <td>L</td>
+      <td>1991-09-10</td>
+      <td>1996-08-24</td>
+      <td>abbok001</td>
+      <td>abbotky01</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>19</td>
+      <td>abbotpa01</td>
+      <td>Paul</td>
+      <td>Abbott</td>
+      <td>Paul David</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1990-08-21</td>
+      <td>2004-08-07</td>
+      <td>abbop001</td>
+      <td>abbotpa01</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>22</td>
+      <td>abercre01</td>
+      <td>Reggie</td>
+      <td>Abercrombie</td>
+      <td>Reginald Damascus</td>
+      <td>R</td>
+      <td>R</td>
+      <td>2006-04-04</td>
+      <td>2008-09-28</td>
+      <td>aberr001</td>
+      <td>abercre01</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-75bbd526-00b7-4dab-b4ab-fd8e339885fc')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-75bbd526-00b7-4dab-b4ab-fd8e339885fc button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-75bbd526-00b7-4dab-b4ab-fd8e339885fc');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  
+</div>
+</div>
+<div class="cell markdown" id="2148F2rjnstm">
+<p>#Data Management and Representation</p>
+<p>Now that we have our data sets loaded into dataframes, we will add some necessary columns to our dataframes that will be instrumental in testing our hypothesis. We will use some graphs to explain why each additional column of the dataframe is necessary.</p>
+</div>
+<div class="cell code" data-execution_count="6" data-colab="{&quot;height&quot;:295,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="dt4HIyeeBUpb" data-outputId="caf123ed-b508-41dd-8c50-d86afa4722d2">
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Create a bar graph of the total salaries per year</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co">#Create dictionary to stores total payroll as values, and years as keys</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>salaries <span class="op">=</span> {}</span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co">#Add each year to the dictionary</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="cf">for</span> year <span class="kw">in</span> data_salaries[<span class="st">&#39;yearID&#39;</span>].unique():</span>
+<span id="cb7-8"><a href="#cb7-8"></a>  salaries[year] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co">#Calculate total payroll per year</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="cf">for</span> index, row <span class="kw">in</span> data_salaries.iterrows():</span>
+<span id="cb7-12"><a href="#cb7-12"></a>  salaries[row.yearID] <span class="op">+=</span> row.salary</span>
+<span id="cb7-13"><a href="#cb7-13"></a></span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="co">#Create the plot</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a>plt.bar(salaries.keys(), salaries.values())</span>
+<span id="cb7-16"><a href="#cb7-16"></a>plt.ylabel(<span class="st">&quot;Total Salary&quot;</span>)</span>
+<span id="cb7-17"><a href="#cb7-17"></a>plt.xlabel(<span class="st">&quot;Year&quot;</span>)</span>
+<span id="cb7-18"><a href="#cb7-18"></a>plt.title(<span class="st">&quot;Total salary for each year&quot;</span>)</span>
+<span id="cb7-19"><a href="#cb7-19"></a>plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img src="b31571142eb8f293abb27351a1262ae3f72c9b91.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="xz3EhT8HoQtS">
+<p>To start off, we will address the issue of the fact that baseball players get paid more now than in 1985. Baseball is much more popular than it has been before, the league minimum is rising, and the superstars are being paid hundreds of times what they used to. Because of this, we will add a column in our dataframe that represents the fraction of the total payroll a player is being paid. This will allow us to compare salaries between then 2010's and 1980's without too much trouble.</p>
+</div>
+<div class="cell code" data-execution_count="7" data-colab="{&quot;height&quot;:402,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="I-zajemfV1gj" data-outputId="a6a9f08f-0f03-4769-a025-8e0894dab123">
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">#Create violin plot of each players salary per year</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">#Convert salary to a fraction of the total payroll for that year</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="kw">def</span> salary_fraction (row):</span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="cf">return</span> row.salary <span class="op">/</span> salaries[row.yearID]</span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a>data_salaries[<span class="st">&#39;salary_fraction&#39;</span>] <span class="op">=</span> data_salaries.<span class="bu">apply</span> (<span class="kw">lambda</span> row: salary_fraction(row), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb8-8"><a href="#cb8-8"></a></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#Create dictionary to store salary fractions as values and years as keys</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>salaries_fractions <span class="op">=</span> {}</span>
+<span id="cb8-11"><a href="#cb8-11"></a></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co">#Add all years to the dictionary</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="cf">for</span> year <span class="kw">in</span> data_salaries[<span class="st">&#39;yearID&#39;</span>].unique():</span>
+<span id="cb8-14"><a href="#cb8-14"></a>  salaries_fractions[year] <span class="op">=</span> []</span>
+<span id="cb8-15"><a href="#cb8-15"></a></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="co">#Add each player&#39;s salary fraction to the dictionary</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="cf">for</span> index, row <span class="kw">in</span> data_salaries.iterrows():</span>
+<span id="cb8-18"><a href="#cb8-18"></a>  salaries_fractions[row[<span class="st">&#39;yearID&#39;</span>]].append(row.salary_fraction)</span>
+<span id="cb8-19"><a href="#cb8-19"></a></span>
+<span id="cb8-20"><a href="#cb8-20"></a>    </span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="co">#Create the plot</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a>fig_res, ax_res <span class="op">=</span> plt.subplots()</span>
+<span id="cb8-23"><a href="#cb8-23"></a></span>
+<span id="cb8-24"><a href="#cb8-24"></a>ax_res.violinplot(salaries_fractions.values(),salaries_fractions.keys(),widths<span class="op">=</span><span class="dv">4</span>,showmeans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-25"><a href="#cb8-25"></a>ax_res.set_xlabel(<span class="st">&quot;Year&quot;</span>)</span>
+<span id="cb8-26"><a href="#cb8-26"></a>ax_res.set_ylabel(<span class="st">&quot;Fraction of the Total Salary&quot;</span>)</span>
+<span id="cb8-27"><a href="#cb8-27"></a>ax_res.set_title(<span class="st">&quot;Salary of Each Player in Comparison to Total Payroll by Year&quot;</span>)</span></code></pre></div>
+<div class="output stream stderr">
+<pre><code>/usr/local/lib/python3.8/dist-packages/matplotlib/cbook/__init__.py:1376: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify &#39;dtype=object&#39; when creating the ndarray.
+  X = np.atleast_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+/usr/local/lib/python3.8/dist-packages/numpy/core/fromnumeric.py:1970: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify &#39;dtype=object&#39; when creating the ndarray.
+  result = asarray(a).shape
+</code></pre>
+</div>
+<div class="output execute_result" data-execution_count="7">
+<pre><code>Text(0.5, 1.0, &#39;Salary of Each Player in Comparison to Total Payroll by Year&#39;)</code></pre>
+</div>
+<div class="output display_data">
+<p><img src="76a21c27b9f8b657824815aed5bee6f837a6ac18.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="rB6JdjbIo_8m">
+<p>This graph is clearly very difficult to understand, so we will group time frames in terms of five years each. This will help us interperet graphs much easier.</p>
+</div>
+<div class="cell code" data-execution_count="8" data-colab="{&quot;height&quot;:312,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="tLT1p-zVoveW" data-outputId="c648cc71-0971-41ec-f56b-85f408fdee04">
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">#Create a violin plot of each players salary per five year span</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co">#Round down to the nearest 5</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="kw">def</span> round_down_5(row):</span>
+<span id="cb11-5"><a href="#cb11-5"></a>  n <span class="op">=</span> row[<span class="st">&#39;yearID&#39;</span>]</span>
+<span id="cb11-6"><a href="#cb11-6"></a>  <span class="cf">return</span> n<span class="op">//</span><span class="dv">5</span><span class="op">*</span><span class="dv">5</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a></span>
+<span id="cb11-8"><a href="#cb11-8"></a>data_salaries[<span class="st">&#39;5_year_span_start&#39;</span>] <span class="op">=</span> data_salaries.<span class="bu">apply</span> (<span class="kw">lambda</span> row: round_down_5(row), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb11-9"><a href="#cb11-9"></a></span>
+<span id="cb11-10"><a href="#cb11-10"></a></span>
+<span id="cb11-11"><a href="#cb11-11"></a><span class="co">#Create dictionary to store salary fractions as values and years as keys</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a>salaries_fractions <span class="op">=</span> {}</span>
+<span id="cb11-13"><a href="#cb11-13"></a></span>
+<span id="cb11-14"><a href="#cb11-14"></a><span class="co">#Add all five year spans to the dictionary by starting year</span></span>
+<span id="cb11-15"><a href="#cb11-15"></a><span class="cf">for</span> year <span class="kw">in</span> data_salaries[<span class="st">&#39;5_year_span_start&#39;</span>].unique():</span>
+<span id="cb11-16"><a href="#cb11-16"></a>  salaries_fractions[year] <span class="op">=</span> []</span>
+<span id="cb11-17"><a href="#cb11-17"></a></span>
+<span id="cb11-18"><a href="#cb11-18"></a><span class="co">#Add each player&#39;s salary fraction to the dictionary</span></span>
+<span id="cb11-19"><a href="#cb11-19"></a><span class="cf">for</span> index, row <span class="kw">in</span> data_salaries.iterrows():</span>
+<span id="cb11-20"><a href="#cb11-20"></a>  salaries_fractions[row[<span class="st">&#39;5_year_span_start&#39;</span>]].append(row.salary_fraction)</span>
+<span id="cb11-21"><a href="#cb11-21"></a></span>
+<span id="cb11-22"><a href="#cb11-22"></a>    </span>
+<span id="cb11-23"><a href="#cb11-23"></a>    </span>
+<span id="cb11-24"><a href="#cb11-24"></a><span class="co">#Create the plot</span></span>
+<span id="cb11-25"><a href="#cb11-25"></a>fig_res, ax_res <span class="op">=</span> plt.subplots()</span>
+<span id="cb11-26"><a href="#cb11-26"></a></span>
+<span id="cb11-27"><a href="#cb11-27"></a>ax_res.violinplot(salaries_fractions.values(),salaries_fractions.keys(),widths<span class="op">=</span><span class="dv">4</span>,showmeans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-28"><a href="#cb11-28"></a>ax_res.set_xlabel(<span class="st">&quot;5 Year Span Starting Year&quot;</span>)</span>
+<span id="cb11-29"><a href="#cb11-29"></a>ax_res.set_ylabel(<span class="st">&quot;Fraction of the Total Salary&quot;</span>)</span>
+<span id="cb11-30"><a href="#cb11-30"></a>ax_res.set_title(<span class="st">&quot;Salary of Each Player in Comparison to Total Payroll by Five Year Span&quot;</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="8">
+<pre><code>Text(0.5, 1.0, &#39;Salary of Each Player in Comparison to Total Payroll by Five Year Span&#39;)</code></pre>
+</div>
+<div class="output display_data">
+<p><img src="0b968dd04bbb61ce99f550ef2380a96c8f9343b8.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="h0lXGLwZXH2f">
+<p>That's much better! We can see through this violin plot that relative to other players, each player has continued to be paid a similar amount. The overwhelming majority of players make around .001 of the total payroll, with the mean being around .0015 to .002 each year. This will be a better measure to use when comparing data throughout different years.</p>
+<p>Now let's add that data to our batters and pitchers dataframes.</p>
+</div>
+<div class="cell code" data-execution_count="9" data-colab="{&quot;height&quot;:392,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="lw-SprckVwjN" data-outputId="a66c5a4c-d4a5-46c7-f06c-48bedd8166c1">
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>data_batting.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="9">
+
+  <div id="df-a2049127-a8f4-4548-b6c7-1b2513961b07">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>playerID</th>
+      <th>yearID</th>
+      <th>stint</th>
+      <th>teamID</th>
+      <th>lgID</th>
+      <th>G</th>
+      <th>AB</th>
+      <th>R</th>
+      <th>H</th>
+      <th>2B</th>
+      <th>...</th>
+      <th>RBI</th>
+      <th>SB</th>
+      <th>CS</th>
+      <th>BB</th>
+      <th>SO</th>
+      <th>IBB</th>
+      <th>HBP</th>
+      <th>SH</th>
+      <th>SF</th>
+      <th>GIDP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>62254</th>
+      <td>aasedo01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>BAL</td>
+      <td>AL</td>
+      <td>54</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62255</th>
+      <td>abregjo01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>CHN</td>
+      <td>NL</td>
+      <td>6</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62256</th>
+      <td>ackerji01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>61</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62257</th>
+      <td>adamsri02</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>SFN</td>
+      <td>NL</td>
+      <td>54</td>
+      <td>121</td>
+      <td>12</td>
+      <td>23</td>
+      <td>3</td>
+      <td>...</td>
+      <td>10.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>5</td>
+      <td>23.0</td>
+      <td>3.0</td>
+      <td>1.0</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>62258</th>
+      <td>agostju01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>CHA</td>
+      <td>AL</td>
+      <td>54</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62259</th>
+      <td>aguaylu01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>91</td>
+      <td>165</td>
+      <td>27</td>
+      <td>46</td>
+      <td>7</td>
+      <td>...</td>
+      <td>21.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>22</td>
+      <td>26.0</td>
+      <td>5.0</td>
+      <td>6.0</td>
+      <td>4.0</td>
+      <td>3.0</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>62260</th>
+      <td>aguilri01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>NYN</td>
+      <td>NL</td>
+      <td>22</td>
+      <td>36</td>
+      <td>1</td>
+      <td>10</td>
+      <td>2</td>
+      <td>...</td>
+      <td>2.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>7.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>62261</th>
+      <td>aikenwi01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>12</td>
+      <td>20</td>
+      <td>2</td>
+      <td>4</td>
+      <td>1</td>
+      <td>...</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>3</td>
+      <td>6.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>62262</th>
+      <td>alexado01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>36</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>62263</th>
+      <td>allenga01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>14</td>
+      <td>34</td>
+      <td>2</td>
+      <td>4</td>
+      <td>1</td>
+      <td>...</td>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 22 columns</p>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-a2049127-a8f4-4548-b6c7-1b2513961b07')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-a2049127-a8f4-4548-b6c7-1b2513961b07 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-a2049127-a8f4-4548-b6c7-1b2513961b07');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  
+</div>
+</div>
+<div class="cell code" data-execution_count="10" id="WnPu2qDwD8_p">
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co">#Merge the batters data with the salary information</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>batters <span class="op">=</span> data_batting.merge(</span>
+<span id="cb14-3"><a href="#cb14-3"></a>     data_salaries,</span>
+<span id="cb14-4"><a href="#cb14-4"></a>     on<span class="op">=</span>[<span class="st">&quot;yearID&quot;</span>, <span class="st">&quot;playerID&quot;</span>],</span>
+<span id="cb14-5"><a href="#cb14-5"></a>     how<span class="op">=</span><span class="st">&quot;left&quot;</span>,</span>
+<span id="cb14-6"><a href="#cb14-6"></a> )</span>
+<span id="cb14-7"><a href="#cb14-7"></a></span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="co">#Drop all batters whose salary is not available</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a>batters <span class="op">=</span> batters.dropna(subset <span class="op">=</span> [<span class="st">&#39;salary&#39;</span>])</span>
+<span id="cb14-10"><a href="#cb14-10"></a></span>
+<span id="cb14-11"><a href="#cb14-11"></a><span class="co">#Merge the pitchers data with the salary information</span></span>
+<span id="cb14-12"><a href="#cb14-12"></a>pitchers <span class="op">=</span> data_pitching.merge(</span>
+<span id="cb14-13"><a href="#cb14-13"></a>     data_salaries,</span>
+<span id="cb14-14"><a href="#cb14-14"></a>     on<span class="op">=</span>[<span class="st">&quot;yearID&quot;</span>, <span class="st">&quot;playerID&quot;</span>],</span>
+<span id="cb14-15"><a href="#cb14-15"></a>     how<span class="op">=</span><span class="st">&quot;left&quot;</span>,</span>
+<span id="cb14-16"><a href="#cb14-16"></a> )</span>
+<span id="cb14-17"><a href="#cb14-17"></a></span>
+<span id="cb14-18"><a href="#cb14-18"></a><span class="co">#Drop all pitchers whose salary is not available</span></span>
+<span id="cb14-19"><a href="#cb14-19"></a>pitchers <span class="op">=</span> pitchers.dropna(subset <span class="op">=</span> [<span class="st">&#39;salary&#39;</span>])</span></code></pre></div>
+</div>
+<div class="cell markdown" id="MggEE-9O_X8p">
+<p>Now let's only look at a select subset of the batters and pitchers. We only want the players who played enough games in the season.</p>
+</div>
+<div class="cell code" data-execution_count="11" id="ASLpYERa_XSs">
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="co">#Drop all batters who had fewer than 100 AB for a given year</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>batters <span class="op">=</span> batters[batters.AB <span class="op">&gt;</span> <span class="dv">100</span>]</span>
+<span id="cb15-3"><a href="#cb15-3"></a></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="co">#Drop all pitchers who appeared in fewer than 30 games for a given year</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>pitchers <span class="op">=</span> pitchers[pitchers.G <span class="op">&gt;</span> <span class="dv">30</span>]</span></code></pre></div>
+</div>
+<div class="cell markdown" id="38QbumfjAJzs">
+<p>We also don't want to look at players on their rookie contracts, as those tend to be far too high or far too low very often. So let's only look at players who have been in the majors for at least 5 years.</p>
+</div>
+<div class="cell code" data-execution_count="12" id="j3biLKZ5ASOW">
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Merging all career lengths to associated pitchers</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>pitchers <span class="op">=</span> pd.merge(pitchers, data_people, on<span class="op">=</span><span class="st">&#39;playerID&#39;</span>, how<span class="op">=</span><span class="st">&#39;inner&#39;</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="co"># Merging all career lengths to associated batters</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>batters <span class="op">=</span> pd.merge(batters, data_people, on<span class="op">=</span><span class="st">&#39;playerID&#39;</span>, how<span class="op">=</span><span class="st">&#39;inner&#39;</span>)</span>
+<span id="cb16-6"><a href="#cb16-6"></a> </span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># Only accounting for pitchers playing for at least 5 years since they will have signed a larger contract</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>pitchers[<span class="st">&#39;career_length&#39;</span>] <span class="op">=</span> pitchers.<span class="bu">apply</span> (<span class="kw">lambda</span> row: row[<span class="st">&#39;yearID&#39;</span>] <span class="op">-</span> <span class="bu">int</span>(<span class="bu">str</span>(row[<span class="st">&#39;debut&#39;</span>])[:<span class="dv">4</span>]), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb16-9"><a href="#cb16-9"></a>pitchers <span class="op">=</span> pitchers[pitchers.career_length <span class="op">&gt;=</span> <span class="dv">5</span>]</span>
+<span id="cb16-10"><a href="#cb16-10"></a></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="co"># Only accounting for batters playing for at least 5 years since they will have signed a larger contract</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a>batters[<span class="st">&#39;career_length&#39;</span>] <span class="op">=</span> batters.<span class="bu">apply</span> (<span class="kw">lambda</span> row: row[<span class="st">&#39;yearID&#39;</span>] <span class="op">-</span> <span class="bu">int</span>(<span class="bu">str</span>(row[<span class="st">&#39;debut&#39;</span>])[:<span class="dv">4</span>]), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb16-13"><a href="#cb16-13"></a>batters <span class="op">=</span> batters[batters.career_length <span class="op">&gt;=</span> <span class="dv">5</span>]</span></code></pre></div>
+</div>
+<div class="cell markdown" id="PzZ_0HKtpQzH">
+<p>Now let's see what we have in terms of statistics for our batters then our pitchers.</p>
+</div>
+<div class="cell code" data-execution_count="13" data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="k42K2rRIBMSZ" data-outputId="ae27fae6-6aca-4183-a4b1-f95d4d8afde4">
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>batters.columns</span></code></pre></div>
+<div class="output execute_result" data-execution_count="13">
+<pre><code>Index([&#39;playerID&#39;, &#39;yearID&#39;, &#39;stint&#39;, &#39;teamID_x&#39;, &#39;lgID_x&#39;, &#39;G&#39;, &#39;AB&#39;, &#39;R&#39;,
+       &#39;H&#39;, &#39;2B&#39;, &#39;3B&#39;, &#39;HR&#39;, &#39;RBI&#39;, &#39;SB&#39;, &#39;CS&#39;, &#39;BB&#39;, &#39;SO&#39;, &#39;IBB&#39;, &#39;HBP&#39;,
+       &#39;SH&#39;, &#39;SF&#39;, &#39;GIDP&#39;, &#39;teamID_y&#39;, &#39;lgID_y&#39;, &#39;salary&#39;, &#39;salary_fraction&#39;,
+       &#39;5_year_span_start&#39;, &#39;index&#39;, &#39;nameFirst&#39;, &#39;nameLast&#39;, &#39;nameGiven&#39;,
+       &#39;bats&#39;, &#39;throws&#39;, &#39;debut&#39;, &#39;finalGame&#39;, &#39;retroID&#39;, &#39;bbrefID&#39;, &#39;career&#39;,
+       &#39;career_length&#39;],
+      dtype=&#39;object&#39;)</code></pre>
+</div>
+</div>
+<div class="cell code" data-execution_count="14" data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="08fD-SMOBMUs" data-outputId="f50cc1b2-d85d-4089-f522-d743593bb50b">
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>pitchers.columns</span></code></pre></div>
+<div class="output execute_result" data-execution_count="14">
+<pre><code>Index([&#39;playerID&#39;, &#39;yearID&#39;, &#39;stint&#39;, &#39;teamID_x&#39;, &#39;lgID_x&#39;, &#39;W&#39;, &#39;L&#39;, &#39;G&#39;,
+       &#39;GS&#39;, &#39;CG&#39;, &#39;SHO&#39;, &#39;SV&#39;, &#39;IPouts&#39;, &#39;H&#39;, &#39;ER&#39;, &#39;HR&#39;, &#39;BB&#39;, &#39;SO&#39;, &#39;BAOpp&#39;,
+       &#39;ERA&#39;, &#39;IBB&#39;, &#39;WP&#39;, &#39;HBP&#39;, &#39;BK&#39;, &#39;BFP&#39;, &#39;GF&#39;, &#39;R&#39;, &#39;SH&#39;, &#39;SF&#39;, &#39;GIDP&#39;,
+       &#39;teamID_y&#39;, &#39;lgID_y&#39;, &#39;salary&#39;, &#39;salary_fraction&#39;, &#39;5_year_span_start&#39;,
+       &#39;index&#39;, &#39;nameFirst&#39;, &#39;nameLast&#39;, &#39;nameGiven&#39;, &#39;bats&#39;, &#39;throws&#39;,
+       &#39;debut&#39;, &#39;finalGame&#39;, &#39;retroID&#39;, &#39;bbrefID&#39;, &#39;career&#39;, &#39;career_length&#39;],
+      dtype=&#39;object&#39;)</code></pre>
+</div>
+</div>
+<div class="cell markdown" id="15GP0hHoddRt">
+<p>That's looking pretty good, but we seem to be missing a few key statistics. Let's add OPS and batting average for the batters. Check <a href="https://honestbaseball.com/baseball-statistics/" class="uri">https://honestbaseball.com/baseball-statistics/</a> for more information on these statistics.</p>
+</div>
+<div class="cell code" data-execution_count="15" data-colab="{&quot;height&quot;:630,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="J3AVtjx2dpID" data-outputId="6739ac11-50e3-4523-bdf1-272db5d48efc">
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="co">#Create column for batter&#39;s OPS</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="kw">def</span> ops (row):</span>
+<span id="cb21-3"><a href="#cb21-3"></a>  slugging <span class="op">=</span> (row[<span class="st">&#39;H&#39;</span>] <span class="op">+</span> row[<span class="st">&#39;2B&#39;</span>] <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> row[<span class="st">&#39;3B&#39;</span>] <span class="op">+</span> <span class="dv">3</span> <span class="op">*</span> row[<span class="st">&#39;HR&#39;</span>]) <span class="op">/</span> row[<span class="st">&#39;AB&#39;</span>]</span>
+<span id="cb21-4"><a href="#cb21-4"></a>  OBP <span class="op">=</span> (row[<span class="st">&#39;BB&#39;</span>] <span class="op">+</span> row[<span class="st">&#39;IBB&#39;</span>] <span class="op">+</span> row[<span class="st">&#39;HBP&#39;</span>] <span class="op">+</span> row[<span class="st">&#39;H&#39;</span>]) <span class="op">/</span> (row[<span class="st">&#39;AB&#39;</span>] <span class="op">+</span> row[<span class="st">&#39;BB&#39;</span>] <span class="op">+</span> row[<span class="st">&#39;IBB&#39;</span>] <span class="op">+</span> row[<span class="st">&#39;SH&#39;</span>] <span class="op">+</span> row[<span class="st">&#39;SF&#39;</span>] <span class="op">+</span> row[<span class="st">&#39;HBP&#39;</span>])</span>
+<span id="cb21-5"><a href="#cb21-5"></a>  <span class="cf">return</span> slugging <span class="op">+</span> OBP</span>
+<span id="cb21-6"><a href="#cb21-6"></a></span>
+<span id="cb21-7"><a href="#cb21-7"></a>batters[<span class="st">&#39;OPS&#39;</span>] <span class="op">=</span> batters.<span class="bu">apply</span> (<span class="kw">lambda</span> row: ops(row), axis <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb21-8"><a href="#cb21-8"></a></span>
+<span id="cb21-9"><a href="#cb21-9"></a><span class="co">#Create column for batter&#39;s batting average</span></span>
+<span id="cb21-10"><a href="#cb21-10"></a>batters[<span class="st">&#39;AVG&#39;</span>] <span class="op">=</span> batters[<span class="st">&#39;H&#39;</span>] <span class="op">/</span> batters[<span class="st">&#39;AB&#39;</span>]</span>
+<span id="cb21-11"><a href="#cb21-11"></a></span>
+<span id="cb21-12"><a href="#cb21-12"></a>batters.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="15">
+
+  <div id="df-47b2ab29-47c4-49db-89a3-9f1d56538890">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>playerID</th>
+      <th>yearID</th>
+      <th>stint</th>
+      <th>teamID_x</th>
+      <th>lgID_x</th>
+      <th>G</th>
+      <th>AB</th>
+      <th>R</th>
+      <th>H</th>
+      <th>2B</th>
+      <th>...</th>
+      <th>bats</th>
+      <th>throws</th>
+      <th>debut</th>
+      <th>finalGame</th>
+      <th>retroID</th>
+      <th>bbrefID</th>
+      <th>career</th>
+      <th>career_length</th>
+      <th>OPS</th>
+      <th>AVG</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>aguaylu01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>91</td>
+      <td>165</td>
+      <td>27</td>
+      <td>46</td>
+      <td>7</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1980-04-19</td>
+      <td>1989-09-30</td>
+      <td>agual001</td>
+      <td>aguaylu01</td>
+      <td>yes</td>
+      <td>5</td>
+      <td>0.852033</td>
+      <td>0.278788</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>aguaylu01</td>
+      <td>1986</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>62</td>
+      <td>133</td>
+      <td>17</td>
+      <td>28</td>
+      <td>6</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1980-04-19</td>
+      <td>1989-09-30</td>
+      <td>agual001</td>
+      <td>aguaylu01</td>
+      <td>yes</td>
+      <td>6</td>
+      <td>0.628026</td>
+      <td>0.210526</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>aguaylu01</td>
+      <td>1987</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>94</td>
+      <td>209</td>
+      <td>25</td>
+      <td>43</td>
+      <td>9</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1980-04-19</td>
+      <td>1989-09-30</td>
+      <td>agual001</td>
+      <td>aguaylu01</td>
+      <td>yes</td>
+      <td>7</td>
+      <td>0.702962</td>
+      <td>0.205742</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>aguaylu01</td>
+      <td>1988</td>
+      <td>2</td>
+      <td>NYA</td>
+      <td>AL</td>
+      <td>50</td>
+      <td>140</td>
+      <td>12</td>
+      <td>35</td>
+      <td>4</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1980-04-19</td>
+      <td>1989-09-30</td>
+      <td>agual001</td>
+      <td>aguaylu01</td>
+      <td>yes</td>
+      <td>8</td>
+      <td>0.636190</td>
+      <td>0.250000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>almonbi01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>PIT</td>
+      <td>NL</td>
+      <td>88</td>
+      <td>244</td>
+      <td>33</td>
+      <td>66</td>
+      <td>17</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1974-09-02</td>
+      <td>1988-06-14</td>
+      <td>almob001</td>
+      <td>almonbi01</td>
+      <td>yes</td>
+      <td>11</td>
+      <td>0.738752</td>
+      <td>0.270492</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>almonbi01</td>
+      <td>1986</td>
+      <td>1</td>
+      <td>PIT</td>
+      <td>NL</td>
+      <td>102</td>
+      <td>196</td>
+      <td>29</td>
+      <td>43</td>
+      <td>7</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1974-09-02</td>
+      <td>1988-06-14</td>
+      <td>almob001</td>
+      <td>almonbi01</td>
+      <td>yes</td>
+      <td>12</td>
+      <td>0.705929</td>
+      <td>0.219388</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>armasto01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>BOS</td>
+      <td>AL</td>
+      <td>103</td>
+      <td>385</td>
+      <td>50</td>
+      <td>102</td>
+      <td>17</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1976-09-06</td>
+      <td>1989-10-01</td>
+      <td>armat001</td>
+      <td>armasto01</td>
+      <td>yes</td>
+      <td>9</td>
+      <td>0.818634</td>
+      <td>0.264935</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>armasto01</td>
+      <td>1986</td>
+      <td>1</td>
+      <td>BOS</td>
+      <td>AL</td>
+      <td>121</td>
+      <td>425</td>
+      <td>40</td>
+      <td>112</td>
+      <td>21</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1976-09-06</td>
+      <td>1989-10-01</td>
+      <td>armat001</td>
+      <td>armasto01</td>
+      <td>yes</td>
+      <td>10</td>
+      <td>0.715579</td>
+      <td>0.263529</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>armasto01</td>
+      <td>1988</td>
+      <td>1</td>
+      <td>CAL</td>
+      <td>AL</td>
+      <td>120</td>
+      <td>368</td>
+      <td>42</td>
+      <td>100</td>
+      <td>20</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1976-09-06</td>
+      <td>1989-10-01</td>
+      <td>armat001</td>
+      <td>armasto01</td>
+      <td>yes</td>
+      <td>12</td>
+      <td>0.753367</td>
+      <td>0.271739</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>armasto01</td>
+      <td>1989</td>
+      <td>1</td>
+      <td>CAL</td>
+      <td>AL</td>
+      <td>60</td>
+      <td>202</td>
+      <td>22</td>
+      <td>52</td>
+      <td>7</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1976-09-06</td>
+      <td>1989-10-01</td>
+      <td>armat001</td>
+      <td>armasto01</td>
+      <td>yes</td>
+      <td>13</td>
+      <td>0.751732</td>
+      <td>0.257426</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 41 columns</p>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-47b2ab29-47c4-49db-89a3-9f1d56538890')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-47b2ab29-47c4-49db-89a3-9f1d56538890 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-47b2ab29-47c4-49db-89a3-9f1d56538890');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  
+</div>
+</div>
+<div class="cell markdown" id="EPdEWD4CCTiS">
+<p>Now let's add those key statistics for the pitchers. We will add the strikeout and walk percentages for each of the pitchers. Check <a href="https://honestbaseball.com/baseball-statistics/" class="uri">https://honestbaseball.com/baseball-statistics/</a> for more information on these statistics.</p>
+</div>
+<div class="cell code" data-execution_count="16" data-colab="{&quot;height&quot;:630,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="Nz0iNzepCTI2" data-outputId="92b2291e-2f26-4fa0-e0dd-252d3e031599">
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="co">#Create column for pitcher&#39;s walk percentage</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>pitchers[<span class="st">&#39;BB%&#39;</span>] <span class="op">=</span> pitchers[<span class="st">&#39;BB&#39;</span>] <span class="op">/</span> pitchers[<span class="st">&#39;IPouts&#39;</span>]</span>
+<span id="cb22-3"><a href="#cb22-3"></a></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="co">#Create column for pitcher&#39;s strikeout percentage</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a>pitchers[<span class="st">&#39;SO%&#39;</span>] <span class="op">=</span> pitchers[<span class="st">&#39;SO&#39;</span>] <span class="op">/</span> pitchers[<span class="st">&#39;IPouts&#39;</span>]</span>
+<span id="cb22-6"><a href="#cb22-6"></a></span>
+<span id="cb22-7"><a href="#cb22-7"></a>pitchers.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="16">
+
+  <div id="df-adb4f73d-9d1c-487c-ac1a-2ce098bddd81">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>playerID</th>
+      <th>yearID</th>
+      <th>stint</th>
+      <th>teamID_x</th>
+      <th>lgID_x</th>
+      <th>W</th>
+      <th>L</th>
+      <th>G</th>
+      <th>GS</th>
+      <th>CG</th>
+      <th>...</th>
+      <th>bats</th>
+      <th>throws</th>
+      <th>debut</th>
+      <th>finalGame</th>
+      <th>retroID</th>
+      <th>bbrefID</th>
+      <th>career</th>
+      <th>career_length</th>
+      <th>BB%</th>
+      <th>SO%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>ackerji01</td>
+      <td>1989</td>
+      <td>1</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>0</td>
+      <td>6</td>
+      <td>59</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1983-04-07</td>
+      <td>1992-06-14</td>
+      <td>ackej001</td>
+      <td>ackerji01</td>
+      <td>yes</td>
+      <td>6</td>
+      <td>0.068259</td>
+      <td>0.232082</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ackerji01</td>
+      <td>1990</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>4</td>
+      <td>4</td>
+      <td>59</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1983-04-07</td>
+      <td>1992-06-14</td>
+      <td>ackej001</td>
+      <td>ackerji01</td>
+      <td>yes</td>
+      <td>7</td>
+      <td>0.109091</td>
+      <td>0.196364</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>agostju01</td>
+      <td>1988</td>
+      <td>1</td>
+      <td>HOU</td>
+      <td>NL</td>
+      <td>10</td>
+      <td>2</td>
+      <td>75</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>L</td>
+      <td>L</td>
+      <td>1981-09-07</td>
+      <td>1993-06-19</td>
+      <td>agosj001</td>
+      <td>agostju01</td>
+      <td>yes</td>
+      <td>7</td>
+      <td>0.109091</td>
+      <td>0.120000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>agostju01</td>
+      <td>1989</td>
+      <td>1</td>
+      <td>HOU</td>
+      <td>NL</td>
+      <td>4</td>
+      <td>5</td>
+      <td>71</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>L</td>
+      <td>L</td>
+      <td>1981-09-07</td>
+      <td>1993-06-19</td>
+      <td>agosj001</td>
+      <td>agostju01</td>
+      <td>yes</td>
+      <td>8</td>
+      <td>0.128514</td>
+      <td>0.184739</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>agostju01</td>
+      <td>1990</td>
+      <td>1</td>
+      <td>HOU</td>
+      <td>NL</td>
+      <td>9</td>
+      <td>8</td>
+      <td>82</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>L</td>
+      <td>L</td>
+      <td>1981-09-07</td>
+      <td>1993-06-19</td>
+      <td>agosj001</td>
+      <td>agostju01</td>
+      <td>yes</td>
+      <td>9</td>
+      <td>0.140794</td>
+      <td>0.180505</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>agostju01</td>
+      <td>1991</td>
+      <td>1</td>
+      <td>SLN</td>
+      <td>NL</td>
+      <td>5</td>
+      <td>3</td>
+      <td>72</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>L</td>
+      <td>L</td>
+      <td>1981-09-07</td>
+      <td>1993-06-19</td>
+      <td>agosj001</td>
+      <td>agostju01</td>
+      <td>yes</td>
+      <td>10</td>
+      <td>0.151163</td>
+      <td>0.131783</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>alexado01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>17</td>
+      <td>10</td>
+      <td>36</td>
+      <td>36</td>
+      <td>6</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1971-06-26</td>
+      <td>1989-09-27</td>
+      <td>alexd001</td>
+      <td>alexado01</td>
+      <td>yes</td>
+      <td>14</td>
+      <td>0.085678</td>
+      <td>0.181586</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>alexado01</td>
+      <td>1988</td>
+      <td>1</td>
+      <td>DET</td>
+      <td>AL</td>
+      <td>14</td>
+      <td>11</td>
+      <td>34</td>
+      <td>34</td>
+      <td>5</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1971-06-26</td>
+      <td>1989-09-27</td>
+      <td>alexd001</td>
+      <td>alexado01</td>
+      <td>yes</td>
+      <td>17</td>
+      <td>0.066958</td>
+      <td>0.183406</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>alexado01</td>
+      <td>1989</td>
+      <td>1</td>
+      <td>DET</td>
+      <td>AL</td>
+      <td>6</td>
+      <td>18</td>
+      <td>33</td>
+      <td>33</td>
+      <td>5</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1971-06-26</td>
+      <td>1989-09-27</td>
+      <td>alexd001</td>
+      <td>alexado01</td>
+      <td>yes</td>
+      <td>18</td>
+      <td>0.113602</td>
+      <td>0.142003</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>anderla02</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>3</td>
+      <td>3</td>
+      <td>57</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>R</td>
+      <td>R</td>
+      <td>1975-09-05</td>
+      <td>1994-07-31</td>
+      <td>andel001</td>
+      <td>anderla02</td>
+      <td>yes</td>
+      <td>10</td>
+      <td>0.118721</td>
+      <td>0.228311</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 49 columns</p>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-adb4f73d-9d1c-487c-ac1a-2ce098bddd81')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-adb4f73d-9d1c-487c-ac1a-2ce098bddd81 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-adb4f73d-9d1c-487c-ac1a-2ce098bddd81');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  
+</div>
+</div>
+<div class="cell markdown" id="PK0P54NvCr52">
+<p>#Data Exploration Let's begin our exploration of the data by looking at our batters. As mentioned above, the three statistics we will be looking into are their OPS, batting average, and home runs. To preliminarily explore these three statistics, we are going to compare the players who make above .15% of the total payroll to those who do not. .15% seems to be approximately the mean for each year, as seen in the violin plot above.</p>
+</div>
+<div class="cell code" data-execution_count="17" data-colab="{&quot;height&quot;:851,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="DQxxq00Betjl" data-outputId="12b7501c-9da6-43f0-93f7-a1b91e083c0c">
+<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a><span class="co">#Create column to indicate if batters are paid more than .15% of the total payroll</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>batters[<span class="st">&#39;high_paid&#39;</span>] <span class="op">=</span> batters.<span class="bu">apply</span> (<span class="kw">lambda</span> row: row[<span class="st">&#39;salary_fraction&#39;</span>] <span class="op">&gt;</span> <span class="fl">0.0015</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb23-3"><a href="#cb23-3"></a></span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="co">#Create dictionary for average values of each statistic per five year span</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a>stat_avg <span class="op">=</span> {}</span>
+<span id="cb23-6"><a href="#cb23-6"></a></span>
+<span id="cb23-7"><a href="#cb23-7"></a><span class="co">#Graph the players making above .15% of the total payroll vs those making less by statistic</span></span>
+<span id="cb23-8"><a href="#cb23-8"></a><span class="cf">for</span> stat <span class="kw">in</span> [<span class="st">&#39;OPS&#39;</span>, <span class="st">&#39;AVG&#39;</span>, <span class="st">&#39;HR&#39;</span>]:</span>
+<span id="cb23-9"><a href="#cb23-9"></a>  stat_avg[stat] <span class="op">=</span> []</span>
+<span id="cb23-10"><a href="#cb23-10"></a>  </span>
+<span id="cb23-11"><a href="#cb23-11"></a>  <span class="co">#Create dictionary for those making less than .15% of the total payroll</span></span>
+<span id="cb23-12"><a href="#cb23-12"></a>  player_stats_low <span class="op">=</span> {}</span>
+<span id="cb23-13"><a href="#cb23-13"></a></span>
+<span id="cb23-14"><a href="#cb23-14"></a>  <span class="co">#Create dictionary for those making more than .15% of the total payroll</span></span>
+<span id="cb23-15"><a href="#cb23-15"></a>  player_stats_high <span class="op">=</span> {}</span>
+<span id="cb23-16"><a href="#cb23-16"></a>  </span>
+<span id="cb23-17"><a href="#cb23-17"></a>  <span class="cf">for</span> span <span class="kw">in</span> batters[<span class="st">&#39;5_year_span_start&#39;</span>].unique():</span>
+<span id="cb23-18"><a href="#cb23-18"></a>    </span>
+<span id="cb23-19"><a href="#cb23-19"></a>    <span class="co">#Add average value for that stat to stat_avg dictionary</span></span>
+<span id="cb23-20"><a href="#cb23-20"></a>    year_mean <span class="op">=</span> batters.loc[batters[<span class="st">&#39;5_year_span_start&#39;</span>] <span class="op">==</span> span, stat].mean()</span>
+<span id="cb23-21"><a href="#cb23-21"></a>    stat_avg[stat].append(year_mean)</span>
+<span id="cb23-22"><a href="#cb23-22"></a>   </span>
+<span id="cb23-23"><a href="#cb23-23"></a>    <span class="co">#Add average value for that stat among player&#39;s making less than .15% of total payroll to year_mean_low dictionary</span></span>
+<span id="cb23-24"><a href="#cb23-24"></a>    year_mean_low <span class="op">=</span> batters.loc[(batters[<span class="st">&#39;5_year_span_start&#39;</span>] <span class="op">==</span> span) <span class="op">&amp;</span> (batters[<span class="st">&#39;high_paid&#39;</span>] <span class="op">==</span> <span class="va">False</span>), stat].mean()</span>
+<span id="cb23-25"><a href="#cb23-25"></a>    player_stats_low[span] <span class="op">=</span> year_mean_low</span>
+<span id="cb23-26"><a href="#cb23-26"></a></span>
+<span id="cb23-27"><a href="#cb23-27"></a>    <span class="co">#Add average value for that stat among player&#39;s making more than .15% of total payroll to year_mean_high dictionary</span></span>
+<span id="cb23-28"><a href="#cb23-28"></a>    year_mean_high <span class="op">=</span> batters.loc[(batters[<span class="st">&#39;5_year_span_start&#39;</span>] <span class="op">==</span> span) <span class="op">&amp;</span> (batters[<span class="st">&#39;high_paid&#39;</span>] <span class="op">==</span> <span class="va">True</span>), stat].mean()</span>
+<span id="cb23-29"><a href="#cb23-29"></a>    player_stats_high[span] <span class="op">=</span> year_mean_high</span>
+<span id="cb23-30"><a href="#cb23-30"></a></span>
+<span id="cb23-31"><a href="#cb23-31"></a>  <span class="co">#Create the plot</span></span>
+<span id="cb23-32"><a href="#cb23-32"></a>  plt.bar(player_stats_low.keys(), player_stats_low.values(), <span class="dv">3</span>, label <span class="op">=</span> <span class="st">&quot;Low Salaries&quot;</span>)</span>
+<span id="cb23-33"><a href="#cb23-33"></a>  plt.bar(player_stats_high.keys(), player_stats_high.values(), <span class="dv">1</span>, label <span class="op">=</span> <span class="st">&quot;High Salaries&quot;</span>)</span>
+<span id="cb23-34"><a href="#cb23-34"></a>  plt.ylabel(<span class="st">&quot;Average &quot;</span> <span class="op">+</span> stat)</span>
+<span id="cb23-35"><a href="#cb23-35"></a>  plt.xlabel(<span class="st">&quot;Year&quot;</span>)</span>
+<span id="cb23-36"><a href="#cb23-36"></a>  plt.title(<span class="st">&quot;Comparing average &quot;</span> <span class="op">+</span> stat <span class="op">+</span> <span class="st">&quot; for each year&quot;</span>)</span>
+<span id="cb23-37"><a href="#cb23-37"></a>  plt.legend()</span>
+<span id="cb23-38"><a href="#cb23-38"></a>  plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img src="fd4ad44afade69f6b63df6633d90973f7e63444d.png" /></p>
+</div>
+<div class="output display_data">
+<p><img src="036a17a581ef95c50e3dedc70990bdae94ff6f5e.png" /></p>
+</div>
+<div class="output display_data">
+<p><img src="c6c906aa8f726ea1593a2587906b1452f5b28227.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="ddjUx_BPk9RE">
+<p>Clearly there is some difference between the players who get paid more and those who get paid less. In order to investigate further, let's create an interaction term to combine these three statistics. Since the home runs seem to be much more indicative of more pay, we will weight home runs higher for our interaction term.</p>
+</div>
+<div class="cell code" data-execution_count="18" id="D11LPv4jlCRJ">
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="co">#Create interaction term column for each of our batters</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a><span class="kw">def</span> get_interaction (row):</span>
+<span id="cb24-3"><a href="#cb24-3"></a>  span <span class="op">=</span> row[<span class="st">&#39;5_year_span_start&#39;</span>]</span>
+<span id="cb24-4"><a href="#cb24-4"></a>  norm_ops <span class="op">=</span> row[<span class="st">&#39;OPS&#39;</span>] <span class="op">/</span> stat_avg[<span class="st">&#39;OPS&#39;</span>][<span class="bu">int</span>((span<span class="op">-</span><span class="dv">1985</span>)<span class="op">//</span><span class="dv">5</span>)]</span>
+<span id="cb24-5"><a href="#cb24-5"></a>  norm_avg <span class="op">=</span> row[<span class="st">&#39;AVG&#39;</span>] <span class="op">/</span> stat_avg[<span class="st">&#39;AVG&#39;</span>][<span class="bu">int</span>((span<span class="op">-</span><span class="dv">1985</span>)<span class="op">//</span><span class="dv">5</span>)]</span>
+<span id="cb24-6"><a href="#cb24-6"></a>  norm_hr <span class="op">=</span> row[<span class="st">&#39;HR&#39;</span>] <span class="op">/</span> stat_avg[<span class="st">&#39;HR&#39;</span>][<span class="bu">int</span>((span<span class="op">-</span><span class="dv">1985</span>)<span class="op">//</span><span class="dv">5</span>)]</span>
+<span id="cb24-7"><a href="#cb24-7"></a>  <span class="cf">return</span> (norm_ops <span class="op">+</span> norm_avg <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> norm_hr) <span class="op">/</span> <span class="dv">4</span></span>
+<span id="cb24-8"><a href="#cb24-8"></a></span>
+<span id="cb24-9"><a href="#cb24-9"></a></span>
+<span id="cb24-10"><a href="#cb24-10"></a>batters[<span class="st">&#39;interaction_term&#39;</span>] <span class="op">=</span> batters.<span class="bu">apply</span>(<span class="kw">lambda</span> row: get_interaction(row), axis <span class="op">=</span> <span class="dv">1</span>)</span></code></pre></div>
+</div>
+<div class="cell markdown" id="iyidKGGBYYFQ">
+<p>Let's see those interaction terms we just generated</p>
+</div>
+<div class="cell code" data-execution_count="19" data-colab="{&quot;height&quot;:630,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="w0SRb7lQYaiz" data-outputId="0682e728-c471-459e-a0fb-8fc84ed10666">
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>batters.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="19">
+
+  <div id="df-64bf5733-846b-40ea-9e82-fe7d82903343">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>playerID</th>
+      <th>yearID</th>
+      <th>stint</th>
+      <th>teamID_x</th>
+      <th>lgID_x</th>
+      <th>G</th>
+      <th>AB</th>
+      <th>R</th>
+      <th>H</th>
+      <th>2B</th>
+      <th>...</th>
+      <th>debut</th>
+      <th>finalGame</th>
+      <th>retroID</th>
+      <th>bbrefID</th>
+      <th>career</th>
+      <th>career_length</th>
+      <th>OPS</th>
+      <th>AVG</th>
+      <th>high_paid</th>
+      <th>interaction_term</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>aguaylu01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>91</td>
+      <td>165</td>
+      <td>27</td>
+      <td>46</td>
+      <td>7</td>
+      <td>...</td>
+      <td>1980-04-19</td>
+      <td>1989-09-30</td>
+      <td>agual001</td>
+      <td>aguaylu01</td>
+      <td>yes</td>
+      <td>5</td>
+      <td>0.852033</td>
+      <td>0.278788</td>
+      <td>False</td>
+      <td>0.860086</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>aguaylu01</td>
+      <td>1986</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>62</td>
+      <td>133</td>
+      <td>17</td>
+      <td>28</td>
+      <td>6</td>
+      <td>...</td>
+      <td>1980-04-19</td>
+      <td>1989-09-30</td>
+      <td>agual001</td>
+      <td>aguaylu01</td>
+      <td>yes</td>
+      <td>6</td>
+      <td>0.628026</td>
+      <td>0.210526</td>
+      <td>False</td>
+      <td>0.617823</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>aguaylu01</td>
+      <td>1987</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>94</td>
+      <td>209</td>
+      <td>25</td>
+      <td>43</td>
+      <td>9</td>
+      <td>...</td>
+      <td>1980-04-19</td>
+      <td>1989-09-30</td>
+      <td>agual001</td>
+      <td>aguaylu01</td>
+      <td>yes</td>
+      <td>7</td>
+      <td>0.702962</td>
+      <td>0.205742</td>
+      <td>False</td>
+      <td>1.036397</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>aguaylu01</td>
+      <td>1988</td>
+      <td>2</td>
+      <td>NYA</td>
+      <td>AL</td>
+      <td>50</td>
+      <td>140</td>
+      <td>12</td>
+      <td>35</td>
+      <td>4</td>
+      <td>...</td>
+      <td>1980-04-19</td>
+      <td>1989-09-30</td>
+      <td>agual001</td>
+      <td>aguaylu01</td>
+      <td>yes</td>
+      <td>8</td>
+      <td>0.636190</td>
+      <td>0.250000</td>
+      <td>False</td>
+      <td>0.608988</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>almonbi01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>PIT</td>
+      <td>NL</td>
+      <td>88</td>
+      <td>244</td>
+      <td>33</td>
+      <td>66</td>
+      <td>17</td>
+      <td>...</td>
+      <td>1974-09-02</td>
+      <td>1988-06-14</td>
+      <td>almob001</td>
+      <td>almonbi01</td>
+      <td>yes</td>
+      <td>11</td>
+      <td>0.738752</td>
+      <td>0.270492</td>
+      <td>False</td>
+      <td>0.813071</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>almonbi01</td>
+      <td>1986</td>
+      <td>1</td>
+      <td>PIT</td>
+      <td>NL</td>
+      <td>102</td>
+      <td>196</td>
+      <td>29</td>
+      <td>43</td>
+      <td>7</td>
+      <td>...</td>
+      <td>1974-09-02</td>
+      <td>1988-06-14</td>
+      <td>almob001</td>
+      <td>almonbi01</td>
+      <td>yes</td>
+      <td>12</td>
+      <td>0.705929</td>
+      <td>0.219388</td>
+      <td>False</td>
+      <td>0.802208</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>armasto01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>BOS</td>
+      <td>AL</td>
+      <td>103</td>
+      <td>385</td>
+      <td>50</td>
+      <td>102</td>
+      <td>17</td>
+      <td>...</td>
+      <td>1976-09-06</td>
+      <td>1989-10-01</td>
+      <td>armat001</td>
+      <td>armasto01</td>
+      <td>yes</td>
+      <td>9</td>
+      <td>0.818634</td>
+      <td>0.264935</td>
+      <td>True</td>
+      <td>1.679646</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>armasto01</td>
+      <td>1986</td>
+      <td>1</td>
+      <td>BOS</td>
+      <td>AL</td>
+      <td>121</td>
+      <td>425</td>
+      <td>40</td>
+      <td>112</td>
+      <td>21</td>
+      <td>...</td>
+      <td>1976-09-06</td>
+      <td>1989-10-01</td>
+      <td>armat001</td>
+      <td>armasto01</td>
+      <td>yes</td>
+      <td>10</td>
+      <td>0.715579</td>
+      <td>0.263529</td>
+      <td>True</td>
+      <td>1.046738</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>armasto01</td>
+      <td>1988</td>
+      <td>1</td>
+      <td>CAL</td>
+      <td>AL</td>
+      <td>120</td>
+      <td>368</td>
+      <td>42</td>
+      <td>100</td>
+      <td>20</td>
+      <td>...</td>
+      <td>1976-09-06</td>
+      <td>1989-10-01</td>
+      <td>armat001</td>
+      <td>armasto01</td>
+      <td>yes</td>
+      <td>12</td>
+      <td>0.753367</td>
+      <td>0.271739</td>
+      <td>False</td>
+      <td>1.167006</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>armasto01</td>
+      <td>1989</td>
+      <td>1</td>
+      <td>CAL</td>
+      <td>AL</td>
+      <td>60</td>
+      <td>202</td>
+      <td>22</td>
+      <td>52</td>
+      <td>7</td>
+      <td>...</td>
+      <td>1976-09-06</td>
+      <td>1989-10-01</td>
+      <td>armat001</td>
+      <td>armasto01</td>
+      <td>yes</td>
+      <td>13</td>
+      <td>0.751732</td>
+      <td>0.257426</td>
+      <td>False</td>
+      <td>1.053312</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 43 columns</p>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-64bf5733-846b-40ea-9e82-fe7d82903343')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-64bf5733-846b-40ea-9e82-fe7d82903343 button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-64bf5733-846b-40ea-9e82-fe7d82903343');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  
+</div>
+</div>
+<div class="cell markdown" id="k9wML8MFYm3Z">
+<p>Let's now look at a violin plot of the interaction terms for each player. This plot will be very helpful, as we can see not just what the mean is, but also what the distribution is. Clearly, based on how the interaction term was calculated, the mean will be 1 for each five year span. This, however, will let us compare the distributions among each five year span.</p>
+</div>
+<div class="cell code" data-execution_count="20" data-colab="{&quot;height&quot;:402,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="YXWyighVmQbd" data-outputId="828d4425-d314-4d9e-b44c-c55337bca5c5">
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a><span class="co">#Create dictionary for interaction terms by five year span</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>term_means <span class="op">=</span> {}</span>
+<span id="cb26-3"><a href="#cb26-3"></a></span>
+<span id="cb26-4"><a href="#cb26-4"></a><span class="co">#For each batter, add there interaction term to the right five year span</span></span>
+<span id="cb26-5"><a href="#cb26-5"></a><span class="cf">for</span> index, row <span class="kw">in</span> batters.iterrows():</span>
+<span id="cb26-6"><a href="#cb26-6"></a>  <span class="cf">if</span> row[<span class="st">&#39;5_year_span_start&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> term_means.keys():</span>
+<span id="cb26-7"><a href="#cb26-7"></a>    term_means[row[<span class="st">&#39;5_year_span_start&#39;</span>]] <span class="op">=</span> []</span>
+<span id="cb26-8"><a href="#cb26-8"></a>  term_means[row[<span class="st">&#39;5_year_span_start&#39;</span>]].append(row[<span class="st">&#39;interaction_term&#39;</span>])</span>
+<span id="cb26-9"><a href="#cb26-9"></a>    </span>
+<span id="cb26-10"><a href="#cb26-10"></a><span class="co">#Create the plot</span></span>
+<span id="cb26-11"><a href="#cb26-11"></a>fig_res, ax_res <span class="op">=</span> plt.subplots()</span>
+<span id="cb26-12"><a href="#cb26-12"></a></span>
+<span id="cb26-13"><a href="#cb26-13"></a>ax_res.violinplot(term_means.values(), term_means.keys(), widths<span class="op">=</span><span class="dv">4</span>,showmeans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb26-14"><a href="#cb26-14"></a>ax_res.set_xlabel(<span class="st">&quot;5 Year Span Starting Year&quot;</span>)</span>
+<span id="cb26-15"><a href="#cb26-15"></a>ax_res.set_ylabel(<span class="st">&quot;Interaction Term&quot;</span>)</span>
+<span id="cb26-16"><a href="#cb26-16"></a>ax_res.set_title(<span class="st">&quot;Interaction term of players by year&quot;</span>)</span></code></pre></div>
+<div class="output stream stderr">
+<pre><code>/usr/local/lib/python3.8/dist-packages/matplotlib/cbook/__init__.py:1376: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify &#39;dtype=object&#39; when creating the ndarray.
+  X = np.atleast_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+/usr/local/lib/python3.8/dist-packages/numpy/core/fromnumeric.py:1970: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify &#39;dtype=object&#39; when creating the ndarray.
+  result = asarray(a).shape
+</code></pre>
+</div>
+<div class="output execute_result" data-execution_count="20">
+<pre><code>Text(0.5, 1.0, &#39;Interaction term of players by year&#39;)</code></pre>
+</div>
+<div class="output display_data">
+<p><img src="3c293c6fb34d20a3f3ee6e554483274b6976e6cb.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="yAIrhxd1Y5o-">
+<p>This is great news! We can see that the distributions among all seven five year spans look very similar. This, along with the fact that the salary fraction distributions look similar, will allow for the ability to actually compare these two values among different five year spans.</p>
+</div>
+<div class="cell markdown" id="ix2EaXRWZKMS">
+<p>Now that we know that the salary fraction and interaction terms should have roughly the same distributions throughout all of our five year spans, let's do some graphing. Because these two values have consistent distributions throughout all spans, we will be able to include all players from any time span in our scatterplot.</p>
+</div>
+<div class="cell code" data-execution_count="21" data-colab="{&quot;height&quot;:295,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="RkTQMyyYBVbn" data-outputId="bf57a5d2-8810-4b3f-94e7-12514c1ecbaf">
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a><span class="co">#Create scatterplot of all batters interaction terms</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>plt.scatter(batters[<span class="st">&#39;interaction_term&#39;</span>], batters[<span class="st">&#39;salary_fraction&#39;</span>])</span>
+<span id="cb29-3"><a href="#cb29-3"></a>plt.xlabel(<span class="st">&quot;Interaction Term&quot;</span>)</span>
+<span id="cb29-4"><a href="#cb29-4"></a>plt.ylabel(<span class="st">&quot;Salary Fraction&quot;</span>)</span>
+<span id="cb29-5"><a href="#cb29-5"></a>plt.title(<span class="st">&quot;Salary for each player by interaction term&quot;</span>)</span>
+<span id="cb29-6"><a href="#cb29-6"></a></span>
+<span id="cb29-7"><a href="#cb29-7"></a>plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img src="7b49113651d24bd9b28b25359e42fe78d74784b6.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="HW2D_qQAaDyf">
+<p>As assumed, this is a very messy scatterplot. With thousands of data points, we are not able to see very much information from this plot. In order to see a bit more information from our plot, let's create salary brackets. Instead of looking at the exact salary fraction of each player, we can look at their salary bracket. Let's make each bracket the size of .05% of the total payroll. For example, all players who make betwenn .1% and .15% of the total payroll will be put in the same bracket. This will limit total datapoints in order to more easily interperet our scatterplot.</p>
+</div>
+<div class="cell code" data-execution_count="22" data-colab="{&quot;height&quot;:295,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="oBRQvZg8EGJN" data-outputId="5b535b5b-b7d1-4ba9-a8bd-daacddabdb0b">
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a><span class="co">#Round down to the nearest .0005 = .05%</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="kw">def</span> round_down_0005(row):</span>
+<span id="cb30-3"><a href="#cb30-3"></a>  n <span class="op">=</span> row[<span class="st">&#39;salary_fraction&#39;</span>] <span class="op">*</span> <span class="dv">10000</span></span>
+<span id="cb30-4"><a href="#cb30-4"></a>  <span class="cf">return</span> n <span class="op">//</span> <span class="dv">5</span> <span class="op">*</span> <span class="dv">5</span> <span class="op">/</span> <span class="dv">10000</span></span>
+<span id="cb30-5"><a href="#cb30-5"></a></span>
+<span id="cb30-6"><a href="#cb30-6"></a><span class="co">#Create a salary bracket for each batter</span></span>
+<span id="cb30-7"><a href="#cb30-7"></a>batters[<span class="st">&#39;salary_bracket&#39;</span>] <span class="op">=</span> batters.<span class="bu">apply</span> (<span class="kw">lambda</span> row: round_down_0005(row), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb30-8"><a href="#cb30-8"></a></span>
+<span id="cb30-9"><a href="#cb30-9"></a><span class="co">#Create a dictionary for the interaction terms by salary bracket</span></span>
+<span id="cb30-10"><a href="#cb30-10"></a>brackets <span class="op">=</span> {}</span>
+<span id="cb30-11"><a href="#cb30-11"></a></span>
+<span id="cb30-12"><a href="#cb30-12"></a><span class="co">#Add the average interaction term for each salary bracket to brackets dictionary</span></span>
+<span id="cb30-13"><a href="#cb30-13"></a><span class="cf">for</span> brack <span class="kw">in</span> batters[<span class="st">&#39;salary_bracket&#39;</span>].unique():</span>
+<span id="cb30-14"><a href="#cb30-14"></a>  brackets[brack] <span class="op">=</span> batters.loc[batters[<span class="st">&#39;salary_bracket&#39;</span>] <span class="op">==</span> brack, <span class="st">&#39;interaction_term&#39;</span>].mean()</span>
+<span id="cb30-15"><a href="#cb30-15"></a></span>
+<span id="cb30-16"><a href="#cb30-16"></a><span class="co">#Make the plot</span></span>
+<span id="cb30-17"><a href="#cb30-17"></a>plt.scatter(brackets.values(), brackets.keys())</span>
+<span id="cb30-18"><a href="#cb30-18"></a>plt.xlabel(<span class="st">&quot;Salary Bracket&quot;</span>)</span>
+<span id="cb30-19"><a href="#cb30-19"></a>plt.ylabel(<span class="st">&quot;Interaction Term&quot;</span>)</span>
+<span id="cb30-20"><a href="#cb30-20"></a>plt.title(<span class="st">&quot;Salary bracket based on interaction term&quot;</span>)</span>
+<span id="cb30-21"><a href="#cb30-21"></a></span>
+<span id="cb30-22"><a href="#cb30-22"></a>plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img src="6da9c9d3501c4d2debec7653081b6d9bc9c1f7bf.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="QL2jBG58bUoE">
+<p>That is a much nicer looking graph. We will go into more depth on it when we formally test our hypothesis. For now, however, let's look at the pitchers. We will begin in the same way we did with our batters. let's look at a few statistics, and compare how the high paid players did compared to the lower paid ones.</p>
+</div>
+<div class="cell code" data-execution_count="23" data-colab="{&quot;height&quot;:1000,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="FoHkrySXbyuG" data-outputId="cc156b18-d16d-4af2-bae7-3978a31987a3">
+<div class="sourceCode" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a><span class="co">#Create column to indicate if pitchers are paid more than .15% of the total payroll</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a>pitchers[<span class="st">&#39;high_paid&#39;</span>] <span class="op">=</span> pitchers.<span class="bu">apply</span> (<span class="kw">lambda</span> row: row[<span class="st">&#39;salary_fraction&#39;</span>] <span class="op">&gt;</span> <span class="fl">0.0015</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb31-3"><a href="#cb31-3"></a></span>
+<span id="cb31-4"><a href="#cb31-4"></a><span class="co">#Create dictionary for average values of each statistic per five year span</span></span>
+<span id="cb31-5"><a href="#cb31-5"></a>stat_avg <span class="op">=</span> {}</span>
+<span id="cb31-6"><a href="#cb31-6"></a></span>
+<span id="cb31-7"><a href="#cb31-7"></a><span class="co">#Graph the players making above .15% of the total payroll vs those making less by statistic</span></span>
+<span id="cb31-8"><a href="#cb31-8"></a><span class="cf">for</span> stat <span class="kw">in</span> [<span class="st">&#39;BB%&#39;</span>, <span class="st">&#39;SO%&#39;</span>, <span class="st">&#39;BAOpp&#39;</span>, <span class="st">&#39;ERA&#39;</span>, <span class="st">&#39;IPouts&#39;</span>]:</span>
+<span id="cb31-9"><a href="#cb31-9"></a>  stat_avg[stat] <span class="op">=</span> []</span>
+<span id="cb31-10"><a href="#cb31-10"></a>  </span>
+<span id="cb31-11"><a href="#cb31-11"></a>  <span class="co">#Create dictionary for those making less than .15% of the total payroll</span></span>
+<span id="cb31-12"><a href="#cb31-12"></a>  player_stats_low <span class="op">=</span> {}</span>
+<span id="cb31-13"><a href="#cb31-13"></a></span>
+<span id="cb31-14"><a href="#cb31-14"></a>  <span class="co">#Create dictionary for those making more than .15% of the total payroll</span></span>
+<span id="cb31-15"><a href="#cb31-15"></a>  player_stats_high <span class="op">=</span> {}</span>
+<span id="cb31-16"><a href="#cb31-16"></a>  </span>
+<span id="cb31-17"><a href="#cb31-17"></a>  <span class="cf">for</span> span <span class="kw">in</span> pitchers[<span class="st">&#39;5_year_span_start&#39;</span>].unique():</span>
+<span id="cb31-18"><a href="#cb31-18"></a>    </span>
+<span id="cb31-19"><a href="#cb31-19"></a>    <span class="co">#Add average value for that stat to stat_avg dictionary</span></span>
+<span id="cb31-20"><a href="#cb31-20"></a>    year_mean <span class="op">=</span> pitchers.loc[pitchers[<span class="st">&#39;5_year_span_start&#39;</span>] <span class="op">==</span> span, stat].mean()</span>
+<span id="cb31-21"><a href="#cb31-21"></a>    stat_avg[stat].append(year_mean)</span>
+<span id="cb31-22"><a href="#cb31-22"></a>   </span>
+<span id="cb31-23"><a href="#cb31-23"></a>    <span class="co">#Add average value for that stat among player&#39;s making less than .15% of total payroll to year_mean_low dictionary</span></span>
+<span id="cb31-24"><a href="#cb31-24"></a>    year_mean_low <span class="op">=</span> pitchers.loc[(pitchers[<span class="st">&#39;5_year_span_start&#39;</span>] <span class="op">==</span> span) <span class="op">&amp;</span> (pitchers[<span class="st">&#39;high_paid&#39;</span>] <span class="op">==</span> <span class="va">False</span>), stat].mean()</span>
+<span id="cb31-25"><a href="#cb31-25"></a>    player_stats_low[span] <span class="op">=</span> year_mean_low</span>
+<span id="cb31-26"><a href="#cb31-26"></a></span>
+<span id="cb31-27"><a href="#cb31-27"></a>    <span class="co">#Add average value for that stat among player&#39;s making more than .15% of total payroll to year_mean_high dictionary</span></span>
+<span id="cb31-28"><a href="#cb31-28"></a>    year_mean_high <span class="op">=</span> pitchers.loc[(pitchers[<span class="st">&#39;5_year_span_start&#39;</span>] <span class="op">==</span> span) <span class="op">&amp;</span> (pitchers[<span class="st">&#39;high_paid&#39;</span>] <span class="op">==</span> <span class="va">True</span>), stat].mean()</span>
+<span id="cb31-29"><a href="#cb31-29"></a>    player_stats_high[span] <span class="op">=</span> year_mean_high</span>
+<span id="cb31-30"><a href="#cb31-30"></a></span>
+<span id="cb31-31"><a href="#cb31-31"></a>  <span class="co">#Create the plot</span></span>
+<span id="cb31-32"><a href="#cb31-32"></a>  plt.bar(player_stats_low.keys(), player_stats_low.values(), <span class="dv">3</span>, label <span class="op">=</span> <span class="st">&quot;Low Salaries&quot;</span>)</span>
+<span id="cb31-33"><a href="#cb31-33"></a>  plt.bar(player_stats_high.keys(), player_stats_high.values(), <span class="dv">1</span>, label <span class="op">=</span> <span class="st">&quot;High Salaries&quot;</span>)</span>
+<span id="cb31-34"><a href="#cb31-34"></a>  plt.ylabel(<span class="st">&quot;Average &quot;</span> <span class="op">+</span> stat)</span>
+<span id="cb31-35"><a href="#cb31-35"></a>  plt.xlabel(<span class="st">&quot;Year&quot;</span>)</span>
+<span id="cb31-36"><a href="#cb31-36"></a>  plt.title(<span class="st">&quot;Comparing average &quot;</span> <span class="op">+</span> stat <span class="op">+</span> <span class="st">&quot; for each year&quot;</span>)</span>
+<span id="cb31-37"><a href="#cb31-37"></a>  plt.legend()</span>
+<span id="cb31-38"><a href="#cb31-38"></a>  plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img src="ceed64adc10ad086b9357c956c9f9256e9aab507.png" /></p>
+</div>
+<div class="output display_data">
+<p><img src="c86b0d62c55f297c092d4fe5502a3d35e05f69a4.png" /></p>
+</div>
+<div class="output display_data">
+<p><img src="fcc16ff355933addb5e03ede6d8d41b46dc322e3.png" /></p>
+</div>
+<div class="output display_data">
+<p><img src="4f3b22b8803bbafe8c6ce72b0bf046a36dffba97.png" /></p>
+</div>
+<div class="output display_data">
+<p><img src="47f688660c15b83923f71a80849c21a1097e090c.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="S1kgUOv9dlos">
+<p>Fantastic! We have gotten similar results to those of the batters. Clearly there is some difference between the players who get paid more and those who get paid less. In order to investigate further, let's create an interaction term to combine these three statistics. Since the innings pitched seem to be much more indicative of more pay, we will weight those higher for our interaction term.</p>
+</div>
+<div class="cell code" data-execution_count="24" id="EKRSEJ1gfRk_">
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a><span class="co">#Create interaction term column for each of our pitchers</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a><span class="kw">def</span> get_interaction(row) :  </span>
+<span id="cb32-3"><a href="#cb32-3"></a>  k_avg <span class="op">=</span> row[<span class="st">&#39;SO%&#39;</span>] <span class="op">/</span> stat_avg[<span class="st">&#39;SO%&#39;</span>][<span class="bu">int</span>((span<span class="op">-</span><span class="dv">1985</span>)<span class="op">//</span><span class="dv">5</span>)]</span>
+<span id="cb32-4"><a href="#cb32-4"></a>  bb_avg <span class="op">=</span> row[<span class="st">&#39;BB%&#39;</span>] <span class="op">/</span> stat_avg[<span class="st">&#39;BB%&#39;</span>][<span class="bu">int</span>((span<span class="op">-</span><span class="dv">1985</span>)<span class="op">//</span><span class="dv">5</span>)]</span>
+<span id="cb32-5"><a href="#cb32-5"></a>  era <span class="op">=</span> row[<span class="st">&#39;ERA&#39;</span>] <span class="op">/</span> stat_avg[<span class="st">&#39;ERA&#39;</span>][<span class="bu">int</span>((span<span class="op">-</span><span class="dv">1985</span>)<span class="op">//</span><span class="dv">5</span>)]</span>
+<span id="cb32-6"><a href="#cb32-6"></a>  baopp <span class="op">=</span> row[<span class="st">&#39;BAOpp&#39;</span>] <span class="op">/</span> stat_avg[<span class="st">&#39;BAOpp&#39;</span>][<span class="bu">int</span>((span<span class="op">-</span><span class="dv">1985</span>)<span class="op">//</span><span class="dv">5</span>)]</span>
+<span id="cb32-7"><a href="#cb32-7"></a>  inn <span class="op">=</span> row[<span class="st">&#39;IPouts&#39;</span>] <span class="op">/</span> stat_avg[<span class="st">&#39;IPouts&#39;</span>][<span class="bu">int</span>((span<span class="op">-</span><span class="dv">1985</span>)<span class="op">//</span><span class="dv">5</span>)]</span>
+<span id="cb32-8"><a href="#cb32-8"></a></span>
+<span id="cb32-9"><a href="#cb32-9"></a>  <span class="cf">return</span> (k_avg <span class="op">-</span> bb_avg <span class="op">-</span> era <span class="op">-</span> baopp <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> inn) <span class="op">/</span> <span class="dv">6</span></span>
+<span id="cb32-10"><a href="#cb32-10"></a></span>
+<span id="cb32-11"><a href="#cb32-11"></a>pitchers[<span class="st">&#39;interaction_term&#39;</span>] <span class="op">=</span> pitchers.<span class="bu">apply</span>(<span class="kw">lambda</span> row: get_interaction(row), axis <span class="op">=</span> <span class="dv">1</span>)</span></code></pre></div>
+</div>
+<div class="cell markdown" id="3jP7V8cEfW-7">
+<p>Let's see those interaction terms we just generated</p>
+</div>
+<div class="cell code" data-execution_count="25" data-colab="{&quot;height&quot;:630,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="vxbHtC6GfYBs" data-outputId="5d4ce458-8fef-49fb-e976-7a36a5df8fc5">
+<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a>pitchers.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="25">
+
+  <div id="df-596db5aa-622e-4d06-8ed2-6346031626ae">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>playerID</th>
+      <th>yearID</th>
+      <th>stint</th>
+      <th>teamID_x</th>
+      <th>lgID_x</th>
+      <th>W</th>
+      <th>L</th>
+      <th>G</th>
+      <th>GS</th>
+      <th>CG</th>
+      <th>...</th>
+      <th>debut</th>
+      <th>finalGame</th>
+      <th>retroID</th>
+      <th>bbrefID</th>
+      <th>career</th>
+      <th>career_length</th>
+      <th>BB%</th>
+      <th>SO%</th>
+      <th>high_paid</th>
+      <th>interaction_term</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>ackerji01</td>
+      <td>1989</td>
+      <td>1</td>
+      <td>ATL</td>
+      <td>NL</td>
+      <td>0</td>
+      <td>6</td>
+      <td>59</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1983-04-07</td>
+      <td>1992-06-14</td>
+      <td>ackej001</td>
+      <td>ackerji01</td>
+      <td>yes</td>
+      <td>6</td>
+      <td>0.068259</td>
+      <td>0.232082</td>
+      <td>True</td>
+      <td>0.104213</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ackerji01</td>
+      <td>1990</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>4</td>
+      <td>4</td>
+      <td>59</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1983-04-07</td>
+      <td>1992-06-14</td>
+      <td>ackej001</td>
+      <td>ackerji01</td>
+      <td>yes</td>
+      <td>7</td>
+      <td>0.109091</td>
+      <td>0.196364</td>
+      <td>True</td>
+      <td>-0.082398</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>agostju01</td>
+      <td>1988</td>
+      <td>1</td>
+      <td>HOU</td>
+      <td>NL</td>
+      <td>10</td>
+      <td>2</td>
+      <td>75</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1981-09-07</td>
+      <td>1993-06-19</td>
+      <td>agosj001</td>
+      <td>agostju01</td>
+      <td>yes</td>
+      <td>7</td>
+      <td>0.109091</td>
+      <td>0.120000</td>
+      <td>False</td>
+      <td>-0.011948</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>agostju01</td>
+      <td>1989</td>
+      <td>1</td>
+      <td>HOU</td>
+      <td>NL</td>
+      <td>4</td>
+      <td>5</td>
+      <td>71</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1981-09-07</td>
+      <td>1993-06-19</td>
+      <td>agosj001</td>
+      <td>agostju01</td>
+      <td>yes</td>
+      <td>8</td>
+      <td>0.128514</td>
+      <td>0.184739</td>
+      <td>True</td>
+      <td>-0.092101</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>agostju01</td>
+      <td>1990</td>
+      <td>1</td>
+      <td>HOU</td>
+      <td>NL</td>
+      <td>9</td>
+      <td>8</td>
+      <td>82</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1981-09-07</td>
+      <td>1993-06-19</td>
+      <td>agosj001</td>
+      <td>agostju01</td>
+      <td>yes</td>
+      <td>9</td>
+      <td>0.140794</td>
+      <td>0.180505</td>
+      <td>True</td>
+      <td>-0.143012</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>agostju01</td>
+      <td>1991</td>
+      <td>1</td>
+      <td>SLN</td>
+      <td>NL</td>
+      <td>5</td>
+      <td>3</td>
+      <td>72</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1981-09-07</td>
+      <td>1993-06-19</td>
+      <td>agosj001</td>
+      <td>agostju01</td>
+      <td>yes</td>
+      <td>10</td>
+      <td>0.151163</td>
+      <td>0.131783</td>
+      <td>True</td>
+      <td>-0.252789</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>alexado01</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>TOR</td>
+      <td>AL</td>
+      <td>17</td>
+      <td>10</td>
+      <td>36</td>
+      <td>36</td>
+      <td>6</td>
+      <td>...</td>
+      <td>1971-06-26</td>
+      <td>1989-09-27</td>
+      <td>alexd001</td>
+      <td>alexado01</td>
+      <td>yes</td>
+      <td>14</td>
+      <td>0.085678</td>
+      <td>0.181586</td>
+      <td>True</td>
+      <td>0.618210</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>alexado01</td>
+      <td>1988</td>
+      <td>1</td>
+      <td>DET</td>
+      <td>AL</td>
+      <td>14</td>
+      <td>11</td>
+      <td>34</td>
+      <td>34</td>
+      <td>5</td>
+      <td>...</td>
+      <td>1971-06-26</td>
+      <td>1989-09-27</td>
+      <td>alexd001</td>
+      <td>alexado01</td>
+      <td>yes</td>
+      <td>17</td>
+      <td>0.066958</td>
+      <td>0.183406</td>
+      <td>True</td>
+      <td>0.475373</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>alexado01</td>
+      <td>1989</td>
+      <td>1</td>
+      <td>DET</td>
+      <td>AL</td>
+      <td>6</td>
+      <td>18</td>
+      <td>33</td>
+      <td>33</td>
+      <td>5</td>
+      <td>...</td>
+      <td>1971-06-26</td>
+      <td>1989-09-27</td>
+      <td>alexd001</td>
+      <td>alexado01</td>
+      <td>yes</td>
+      <td>18</td>
+      <td>0.113602</td>
+      <td>0.142003</td>
+      <td>True</td>
+      <td>0.356682</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>anderla02</td>
+      <td>1985</td>
+      <td>1</td>
+      <td>PHI</td>
+      <td>NL</td>
+      <td>3</td>
+      <td>3</td>
+      <td>57</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1975-09-05</td>
+      <td>1994-07-31</td>
+      <td>andel001</td>
+      <td>anderla02</td>
+      <td>yes</td>
+      <td>10</td>
+      <td>0.118721</td>
+      <td>0.228311</td>
+      <td>False</td>
+      <td>-0.169164</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 51 columns</p>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-596db5aa-622e-4d06-8ed2-6346031626ae')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+        
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+      
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-596db5aa-622e-4d06-8ed2-6346031626ae button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-596db5aa-622e-4d06-8ed2-6346031626ae');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+  
+</div>
+</div>
+<div class="cell markdown" id="Aray6REtfpXX">
+<p>Let's now look at a violin plot of the interaction terms for each player. This plot will be very helpful, as we can see not just what the mean is, but also what the distribution is. Clearly, based on how the interaction term was calculated, the mean will be 1 for each five year span. This, however, will let us compare the distributions among each five year span.</p>
+</div>
+<div class="cell code" data-execution_count="26" data-colab="{&quot;height&quot;:402,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="yrpH4iChfqXk" data-outputId="21cec47c-3dbb-4ebe-932e-c7c807b6ac8c">
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>term_means <span class="op">=</span> {}</span>
+<span id="cb34-2"><a href="#cb34-2"></a></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="cf">for</span> index, row <span class="kw">in</span> pitchers.iterrows():</span>
+<span id="cb34-4"><a href="#cb34-4"></a>  <span class="cf">if</span> row[<span class="st">&#39;5_year_span_start&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> term_means.keys():</span>
+<span id="cb34-5"><a href="#cb34-5"></a>    term_means[row[<span class="st">&#39;5_year_span_start&#39;</span>]] <span class="op">=</span> []</span>
+<span id="cb34-6"><a href="#cb34-6"></a>  term_means[row[<span class="st">&#39;5_year_span_start&#39;</span>]].append(row[<span class="st">&#39;interaction_term&#39;</span>])</span>
+<span id="cb34-7"><a href="#cb34-7"></a></span>
+<span id="cb34-8"><a href="#cb34-8"></a>fig_res, ax_res <span class="op">=</span> plt.subplots()</span>
+<span id="cb34-9"><a href="#cb34-9"></a>    </span>
+<span id="cb34-10"><a href="#cb34-10"></a><span class="co">#Create the plot</span></span>
+<span id="cb34-11"><a href="#cb34-11"></a>ax_res.violinplot(term_means.values(), term_means.keys(), widths<span class="op">=</span><span class="dv">4</span>,showmeans<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb34-12"><a href="#cb34-12"></a>ax_res.set_xlabel(<span class="st">&quot;5 Year Span Starting Year&quot;</span>)</span>
+<span id="cb34-13"><a href="#cb34-13"></a>ax_res.set_ylabel(<span class="st">&quot;Interaction Term&quot;</span>)</span>
+<span id="cb34-14"><a href="#cb34-14"></a>ax_res.set_title(<span class="st">&quot;Interaction term of players by year&quot;</span>)</span></code></pre></div>
+<div class="output stream stderr">
+<pre><code>/usr/local/lib/python3.8/dist-packages/matplotlib/cbook/__init__.py:1376: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify &#39;dtype=object&#39; when creating the ndarray.
+  X = np.atleast_1d(X.T if isinstance(X, np.ndarray) else np.asarray(X))
+/usr/local/lib/python3.8/dist-packages/numpy/core/fromnumeric.py:1970: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify &#39;dtype=object&#39; when creating the ndarray.
+  result = asarray(a).shape
+</code></pre>
+</div>
+<div class="output execute_result" data-execution_count="26">
+<pre><code>Text(0.5, 1.0, &#39;Interaction term of players by year&#39;)</code></pre>
+</div>
+<div class="output display_data">
+<p><img src="3a373cd1d689d0b15482a0167f12deb69b51c5cb.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="OeJYsCFZf3PC">
+<p>Similarly to the batters, we see very similar distributions throughout the years. It varies slightly more than it did with the batters, but they are still similar enough that results among different years will still be quite meaningful.</p>
+</div>
+<div class="cell markdown" id="SBxrs3LOgOgs">
+<p>Now that we know that the salary fraction and interaction terms should have roughly the same distributions throughout all of our five year spans, let's make the same scatterplot for pitching as we did for batting.</p>
+</div>
+<div class="cell code" data-execution_count="27" data-colab="{&quot;height&quot;:295,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="Ix4cZaA9gUfN" data-outputId="f83f8447-99bf-4ae8-c32f-859b1b08b70c">
+<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a><span class="co">#Create scatterplot of all pitchers interaction terms</span></span>
+<span id="cb37-2"><a href="#cb37-2"></a>plt.scatter(pitchers[<span class="st">&#39;interaction_term&#39;</span>], pitchers[<span class="st">&#39;salary_fraction&#39;</span>])</span>
+<span id="cb37-3"><a href="#cb37-3"></a>plt.xlabel(<span class="st">&quot;Interaction Term&quot;</span>)</span>
+<span id="cb37-4"><a href="#cb37-4"></a>plt.ylabel(<span class="st">&quot;Salary Fraction&quot;</span>)</span>
+<span id="cb37-5"><a href="#cb37-5"></a>plt.title(<span class="st">&quot;Salary for each player by interaction term&quot;</span>)</span>
+<span id="cb37-6"><a href="#cb37-6"></a></span>
+<span id="cb37-7"><a href="#cb37-7"></a>plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img src="a54759cd0d5acf929a968c6b5c4dd0b243d5598b.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="L49I3BzIglSj">
+<p>As was the case with the batters, this is a very messy scatterplot. With thousands of data points, we are not able to see very much information from this plot. In order to see a bit more information from our plot, let's create salary brackets, just as we did for our batters.</p>
+</div>
+<div class="cell code" data-execution_count="28" data-colab="{&quot;height&quot;:295,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="i0n2e2WUglSk" data-outputId="9eca89a3-cb03-4e19-f10a-0744f0e53c00">
+<div class="sourceCode" id="cb38"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">def</span> round_down_0005(row):</span>
+<span id="cb38-2"><a href="#cb38-2"></a>  n <span class="op">=</span> row[<span class="st">&#39;salary_fraction&#39;</span>] <span class="op">*</span> <span class="dv">10000</span></span>
+<span id="cb38-3"><a href="#cb38-3"></a>  <span class="cf">return</span> n <span class="op">//</span> <span class="dv">5</span> <span class="op">*</span> <span class="dv">5</span> <span class="op">/</span> <span class="dv">10000</span></span>
+<span id="cb38-4"><a href="#cb38-4"></a></span>
+<span id="cb38-5"><a href="#cb38-5"></a>pitchers[<span class="st">&#39;salary_bracket&#39;</span>] <span class="op">=</span> pitchers.<span class="bu">apply</span> (<span class="kw">lambda</span> row: round_down_0005(row), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb38-6"><a href="#cb38-6"></a></span>
+<span id="cb38-7"><a href="#cb38-7"></a>brackets <span class="op">=</span> {}</span>
+<span id="cb38-8"><a href="#cb38-8"></a></span>
+<span id="cb38-9"><a href="#cb38-9"></a><span class="cf">for</span> brack <span class="kw">in</span> pitchers[<span class="st">&#39;salary_bracket&#39;</span>].unique():</span>
+<span id="cb38-10"><a href="#cb38-10"></a>  brackets[brack] <span class="op">=</span> pitchers.loc[pitchers[<span class="st">&#39;salary_bracket&#39;</span>] <span class="op">==</span> brack, <span class="st">&#39;interaction_term&#39;</span>].mean()</span>
+<span id="cb38-11"><a href="#cb38-11"></a></span>
+<span id="cb38-12"><a href="#cb38-12"></a></span>
+<span id="cb38-13"><a href="#cb38-13"></a>plt.scatter(brackets.values(), brackets.keys())</span>
+<span id="cb38-14"><a href="#cb38-14"></a>plt.xlabel(<span class="st">&quot;Interaction Term&quot;</span>)</span>
+<span id="cb38-15"><a href="#cb38-15"></a>plt.ylabel(<span class="st">&quot;Salary Bracket&quot;</span>)</span>
+<span id="cb38-16"><a href="#cb38-16"></a>plt.title(<span class="st">&quot;Salary bracket based on interaction term&quot;</span>)</span>
+<span id="cb38-17"><a href="#cb38-17"></a></span>
+<span id="cb38-18"><a href="#cb38-18"></a>plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img src="0ed5bc3750d1cd03ec0cb410f6726fd0607aa542.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="XZk8yi_SOsie">
+<p>We see a huge amount of correlation between the salary bracket and the interaction term here. Now that we have looked into our pitchers and batters, let's test our initial hypothesis.</p>
+</div>
+<div class="cell markdown" id="3hC1iNHQg81A">
+<p>#Hypothesis Testing</p>
+<p>In case you don't remember, our null hypothesis for this experiment is that a player's performace has no impact on the player's salary. We are trying to prove that, in fact, there is a correlation between these two values. We have presented a fair amount of graphs in order to explore our data, and to test our hypothesis, we are going to look at a few of the graphs more closely.</p>
+</div>
+<div class="cell markdown" id="ZekTJIRrhVQ6">
+<p>Let's begin again with our batters. We will look at the scatterplot from above. This time, however, we will include a trendline. Recall that looking at exact salaries resulted in a very messy graph that looked to be filled with points. Because of this, we will use the graph with salary brackets in order to test our hypothesis.</p>
+</div>
+<div class="cell code" data-execution_count="29" data-colab="{&quot;height&quot;:295,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="nFVNeMY3hfi2" data-outputId="cab5d409-d4ff-43a0-f5f9-781e50d90ff0">
+<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb39-2"><a href="#cb39-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb39-3"><a href="#cb39-3"></a></span>
+<span id="cb39-4"><a href="#cb39-4"></a>brackets <span class="op">=</span> {}</span>
+<span id="cb39-5"><a href="#cb39-5"></a></span>
+<span id="cb39-6"><a href="#cb39-6"></a><span class="cf">for</span> brack <span class="kw">in</span> batters[<span class="st">&#39;salary_bracket&#39;</span>].unique():</span>
+<span id="cb39-7"><a href="#cb39-7"></a>  brackets[brack] <span class="op">=</span> batters.loc[batters[<span class="st">&#39;salary_bracket&#39;</span>] <span class="op">==</span> brack, <span class="st">&#39;interaction_term&#39;</span>].mean()</span>
+<span id="cb39-8"><a href="#cb39-8"></a></span>
+<span id="cb39-9"><a href="#cb39-9"></a></span>
+<span id="cb39-10"><a href="#cb39-10"></a>y <span class="op">=</span> np.array(<span class="bu">list</span>(brackets.keys())).reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb39-11"><a href="#cb39-11"></a>x <span class="op">=</span> np.array(<span class="bu">list</span>(brackets.values())).reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb39-12"><a href="#cb39-12"></a></span>
+<span id="cb39-13"><a href="#cb39-13"></a><span class="co">#Initialize and fit the model</span></span>
+<span id="cb39-14"><a href="#cb39-14"></a>reg_bat <span class="op">=</span> LinearRegression()</span>
+<span id="cb39-15"><a href="#cb39-15"></a>reg_bat.fit(x, y)</span>
+<span id="cb39-16"><a href="#cb39-16"></a></span>
+<span id="cb39-17"><a href="#cb39-17"></a>plt.plot(x, reg_bat.predict(x))</span>
+<span id="cb39-18"><a href="#cb39-18"></a></span>
+<span id="cb39-19"><a href="#cb39-19"></a>plt.scatter(brackets.values(), brackets.keys())</span>
+<span id="cb39-20"><a href="#cb39-20"></a>plt.xlabel(<span class="st">&quot;Interaction Term&quot;</span>)</span>
+<span id="cb39-21"><a href="#cb39-21"></a>plt.ylabel(<span class="st">&quot;Salary Bracket&quot;</span>)</span>
+<span id="cb39-22"><a href="#cb39-22"></a>plt.title(<span class="st">&quot;Salary bracket based on interaction term&quot;</span>)</span>
+<span id="cb39-23"><a href="#cb39-23"></a></span>
+<span id="cb39-24"><a href="#cb39-24"></a>plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img src="c5f5f56e603f28257edb6badd2b3bc94d5784cd4.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="_RHAWez_iXlO">
+<p>That looks pretty promising. Let's calculate the R-squared value to make sure there is a correlation between the interaction term and the salary bracket.</p>
+</div>
+<div class="cell code" data-execution_count="30" data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="h36Le3jziiVE" data-outputId="4c5308eb-756f-4122-de90-ca7838cea29d">
+<div class="sourceCode" id="cb40"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># compute with formulas from the theory</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a>guess <span class="op">=</span> reg_bat.predict(x)</span>
+<span id="cb40-3"><a href="#cb40-3"></a>residuals <span class="op">=</span> <span class="bu">sum</span>((y<span class="op">-</span>guess)<span class="op">**</span><span class="dv">2</span>)       </span>
+<span id="cb40-4"><a href="#cb40-4"></a>total <span class="op">=</span> <span class="bu">sum</span>((y<span class="op">-</span>np.mean(y))<span class="op">**</span><span class="dv">2</span>)     </span>
+<span id="cb40-5"><a href="#cb40-5"></a>r_squared <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> residuals<span class="op">/</span>total</span>
+<span id="cb40-6"><a href="#cb40-6"></a><span class="bu">print</span>(r_squared)</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>[0.79910965]
+</code></pre>
+</div>
+</div>
+<div class="cell markdown" id="Nc_YXppuin_r">
+<p>We see that our R-squared value is .799. That is certainly high enough to show a correlation between the salary of the batters and their performace. We can therefore reject the null hypothesis in terms of the batters. Let's look now towards the pitchers.</p>
+</div>
+<div class="cell code" data-execution_count="31" data-colab="{&quot;height&quot;:295,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="EY3SJJBMi2BP" data-outputId="18868caa-472c-4b10-b7d3-6c496f46ce82">
+<div class="sourceCode" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb42-2"><a href="#cb42-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb42-3"><a href="#cb42-3"></a></span>
+<span id="cb42-4"><a href="#cb42-4"></a>brackets <span class="op">=</span> {}</span>
+<span id="cb42-5"><a href="#cb42-5"></a></span>
+<span id="cb42-6"><a href="#cb42-6"></a><span class="cf">for</span> brack <span class="kw">in</span> pitchers[<span class="st">&#39;salary_bracket&#39;</span>].unique():</span>
+<span id="cb42-7"><a href="#cb42-7"></a>  brackets[brack] <span class="op">=</span> pitchers.loc[pitchers[<span class="st">&#39;salary_bracket&#39;</span>] <span class="op">==</span> brack, <span class="st">&#39;interaction_term&#39;</span>].mean()</span>
+<span id="cb42-8"><a href="#cb42-8"></a></span>
+<span id="cb42-9"><a href="#cb42-9"></a></span>
+<span id="cb42-10"><a href="#cb42-10"></a>y <span class="op">=</span> np.array(<span class="bu">list</span>(brackets.keys())).reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb42-11"><a href="#cb42-11"></a>x <span class="op">=</span> np.array(<span class="bu">list</span>(brackets.values())).reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb42-12"><a href="#cb42-12"></a></span>
+<span id="cb42-13"><a href="#cb42-13"></a><span class="co">#Initialize and fit the model</span></span>
+<span id="cb42-14"><a href="#cb42-14"></a>reg_pitch <span class="op">=</span> LinearRegression()</span>
+<span id="cb42-15"><a href="#cb42-15"></a>reg_pitch.fit(x, y)</span>
+<span id="cb42-16"><a href="#cb42-16"></a></span>
+<span id="cb42-17"><a href="#cb42-17"></a>plt.plot(x, reg_pitch.predict(x))</span>
+<span id="cb42-18"><a href="#cb42-18"></a></span>
+<span id="cb42-19"><a href="#cb42-19"></a>plt.scatter(brackets.values(), brackets.keys())</span>
+<span id="cb42-20"><a href="#cb42-20"></a>plt.xlabel(<span class="st">&quot;Interaction Term&quot;</span>)</span>
+<span id="cb42-21"><a href="#cb42-21"></a>plt.ylabel(<span class="st">&quot;Salary Bracket&quot;</span>)</span>
+<span id="cb42-22"><a href="#cb42-22"></a>plt.title(<span class="st">&quot;Salary bracket based on interaction term&quot;</span>)</span>
+<span id="cb42-23"><a href="#cb42-23"></a></span>
+<span id="cb42-24"><a href="#cb42-24"></a>plt.show()</span></code></pre></div>
+<div class="output display_data">
+<p><img src="d127bfffc9a275c9c17998ffbb5801edce98078a.png" /></p>
+</div>
+</div>
+<div class="cell markdown" id="r4KTNDZKi2BQ">
+<p>That looks pretty promising. Let's calculate the R-squared value to make sure there is a correlation between the interaction term and the salary bracket.</p>
+</div>
+<div class="cell code" data-execution_count="32" data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="7y4Wwek4i2BR" data-outputId="4c89b1fa-2837-45c7-e630-b5c7618c8068">
+<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a><span class="co"># compute with formulas from the theory</span></span>
+<span id="cb43-2"><a href="#cb43-2"></a>guess <span class="op">=</span> reg_pitch.predict(x)</span>
+<span id="cb43-3"><a href="#cb43-3"></a>residuals <span class="op">=</span> <span class="bu">sum</span>((y<span class="op">-</span>guess)<span class="op">**</span><span class="dv">2</span>)       </span>
+<span id="cb43-4"><a href="#cb43-4"></a>total <span class="op">=</span> <span class="bu">sum</span>((y<span class="op">-</span>np.mean(y))<span class="op">**</span><span class="dv">2</span>)     </span>
+<span id="cb43-5"><a href="#cb43-5"></a>r_squared <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> residuals<span class="op">/</span>total</span>
+<span id="cb43-6"><a href="#cb43-6"></a><span class="bu">print</span>(r_squared)</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>[0.96553238]
+</code></pre>
+</div>
+</div>
+<div class="cell markdown" id="eWmKhacAi2BR">
+<p>We see that our R-squared value is .968. That shows a huge correlation between the pitchers performace level and their salary. We can therefore reject our null hypothesis in terms of the pitchers as well.</p>
+</div>
+<section id="conclusion" class="cell markdown" id="CiJlVVkzTIT8">
+<h1>Conclusion</h1>
+<p>We have looked through player salaries from 1985 through 2016 and analyzed the descrepancies in relevant statistics between the highest and lowest paid players.</p>
+<p>We hope this will give you insight into what factors teams consider when paying their players and how much specific statistics matter to contracts.</p>
+<p>Teams value a batter's OPS, AVG, and especially HR as, ultimately, runs scored is the biggest component of th game.</p>
+<p>Teams value a pitcher's BB%, SO%, ERA, and especially innings pitched as, ultimately, the more quality innings you can provide, the more value you are bringing to your team.</p>
+</section>
+</body>
+</html>
