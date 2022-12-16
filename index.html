@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>200883</title>
+  <title>200886</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -92,44 +92,45 @@
 <h1>Data Collection</h1>
 <p>In this section, we will collect data for the batters and pitchers. In order to get all of the information we need for each player, we will also need to gather information from the salaries data table. We will then combine the salaries with the batters as well as with pitchers in order to view each player and their salary in the same dataframe. <br><br> In this first section, we begin by gathering the data from these data sets, and limiting them to the years between 1985 and 2016. Unfortunately, we were not able to find salary data that went beyond the year 2016.</p>
 </section>
-<div class="cell code" data-execution_count="1" data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="C6ps3H3Y53_z" data-outputId="011a9ef6-4b0f-4134-e313-53faf772f3f9">
+<div class="cell code" data-execution_count="33" data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="C6ps3H3Y53_z" data-outputId="9dce9fd4-61c4-4851-e938-330b0e6ee497">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Imports</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-5"><a href="#cb1-5"></a><span class="im">import</span> datetime</span>
-<span id="cb1-6"><a href="#cb1-6"></a></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># Gathering csv files and condensing to the 22 years between 1985 and 2016</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>data_batting <span class="op">=</span> pd.read_csv(<span class="st">&quot;Batting.csv&quot;</span>)</span>
-<span id="cb1-9"><a href="#cb1-9"></a>data_batting <span class="op">=</span> data_batting[data_batting.yearID <span class="op">&gt;=</span> <span class="dv">1985</span>][data_batting.yearID <span class="op">&lt;=</span> <span class="dv">2016</span>]</span>
-<span id="cb1-10"><a href="#cb1-10"></a></span>
-<span id="cb1-11"><a href="#cb1-11"></a>data_pitching <span class="op">=</span> pd.read_csv(<span class="st">&quot;Pitching.csv&quot;</span>)</span>
-<span id="cb1-12"><a href="#cb1-12"></a>data_pitching <span class="op">=</span> data_pitching[data_pitching.yearID <span class="op">&gt;=</span> <span class="dv">1985</span>][data_pitching.yearID <span class="op">&lt;=</span> <span class="dv">2016</span>]</span>
-<span id="cb1-13"><a href="#cb1-13"></a></span>
-<span id="cb1-14"><a href="#cb1-14"></a>data_salaries <span class="op">=</span> pd.read_csv(<span class="st">&quot;Salaries.csv&quot;</span>)</span>
-<span id="cb1-15"><a href="#cb1-15"></a>data_salaries <span class="op">=</span> data_salaries[data_salaries.yearID <span class="op">&gt;=</span> <span class="dv">1985</span>][data_salaries.yearID <span class="op">&lt;=</span> <span class="dv">2016</span>]</span>
-<span id="cb1-16"><a href="#cb1-16"></a></span>
-<span id="cb1-17"><a href="#cb1-17"></a>data_people <span class="op">=</span> pd.read_csv(<span class="st">&quot;People.csv&quot;</span>)</span>
-<span id="cb1-18"><a href="#cb1-18"></a></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="co"># Condense the data to only include players playing between 1985 and 2016</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a>data_people <span class="op">=</span> data_people.dropna(subset <span class="op">=</span> [<span class="st">&#39;debut&#39;</span>])</span>
-<span id="cb1-21"><a href="#cb1-21"></a><span class="kw">def</span> check_career(row) :</span>
-<span id="cb1-22"><a href="#cb1-22"></a>  <span class="cf">if</span> <span class="bu">int</span>(<span class="bu">str</span>(row[<span class="st">&#39;finalGame&#39;</span>])[:<span class="dv">4</span>]) <span class="op">&lt;=</span> <span class="dv">1985</span> <span class="kw">or</span> <span class="bu">int</span>(<span class="bu">str</span>(row[<span class="st">&#39;debut&#39;</span>])[:<span class="dv">4</span>]) <span class="op">&gt;=</span> <span class="dv">2016</span>:</span>
-<span id="cb1-23"><a href="#cb1-23"></a>    <span class="cf">return</span> <span class="st">&#39;no&#39;</span></span>
-<span id="cb1-24"><a href="#cb1-24"></a>  <span class="cf">return</span> <span class="st">&#39;yes&#39;</span></span>
-<span id="cb1-25"><a href="#cb1-25"></a></span>
-<span id="cb1-26"><a href="#cb1-26"></a>data_people[<span class="st">&#39;career&#39;</span>] <span class="op">=</span> data_people.<span class="bu">apply</span> (<span class="kw">lambda</span> row: check_career(row), axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb1-27"><a href="#cb1-27"></a>data_people <span class="op">=</span> data_people[data_people[<span class="st">&#39;career&#39;</span>] <span class="op">==</span> <span class="st">&#39;yes&#39;</span>]</span>
-<span id="cb1-28"><a href="#cb1-28"></a></span>
-<span id="cb1-29"><a href="#cb1-29"></a><span class="co">#Drop unnecessary columns from the people dataframe</span></span>
-<span id="cb1-30"><a href="#cb1-30"></a>data_people <span class="op">=</span> data_people.drop([<span class="st">&#39;birthYear&#39;</span>, <span class="st">&#39;birthMonth&#39;</span>, <span class="st">&#39;birthDay&#39;</span>, </span>
-<span id="cb1-31"><a href="#cb1-31"></a>                                <span class="st">&#39;birthCountry&#39;</span>, <span class="st">&#39;birthState&#39;</span>, <span class="st">&#39;birthCity&#39;</span>, <span class="st">&#39;deathYear&#39;</span>, <span class="st">&#39;deathMonth&#39;</span>, <span class="st">&#39;deathDay&#39;</span>, </span>
-<span id="cb1-32"><a href="#cb1-32"></a>                                <span class="st">&#39;deathCountry&#39;</span>, <span class="st">&#39;deathState&#39;</span>, <span class="st">&#39;deathCity&#39;</span>, <span class="st">&#39;weight&#39;</span>, <span class="st">&#39;height&#39;</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb1-33"><a href="#cb1-33"></a>data_people <span class="op">=</span> data_people.reset_index()</span></code></pre></div>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="im">import</span> plotly.io <span class="im">as</span> pio</span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># Gathering csv files and condensing to the 22 years between 1985 and 2016</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>data_batting <span class="op">=</span> pd.read_csv(<span class="st">&quot;Batting.csv&quot;</span>)</span>
+<span id="cb1-10"><a href="#cb1-10"></a>data_batting <span class="op">=</span> data_batting[data_batting.yearID <span class="op">&gt;=</span> <span class="dv">1985</span>][data_batting.yearID <span class="op">&lt;=</span> <span class="dv">2016</span>]</span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a>data_pitching <span class="op">=</span> pd.read_csv(<span class="st">&quot;Pitching.csv&quot;</span>)</span>
+<span id="cb1-13"><a href="#cb1-13"></a>data_pitching <span class="op">=</span> data_pitching[data_pitching.yearID <span class="op">&gt;=</span> <span class="dv">1985</span>][data_pitching.yearID <span class="op">&lt;=</span> <span class="dv">2016</span>]</span>
+<span id="cb1-14"><a href="#cb1-14"></a></span>
+<span id="cb1-15"><a href="#cb1-15"></a>data_salaries <span class="op">=</span> pd.read_csv(<span class="st">&quot;Salaries.csv&quot;</span>)</span>
+<span id="cb1-16"><a href="#cb1-16"></a>data_salaries <span class="op">=</span> data_salaries[data_salaries.yearID <span class="op">&gt;=</span> <span class="dv">1985</span>][data_salaries.yearID <span class="op">&lt;=</span> <span class="dv">2016</span>]</span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a>data_people <span class="op">=</span> pd.read_csv(<span class="st">&quot;People.csv&quot;</span>)</span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co"># Condense the data to only include players playing between 1985 and 2016</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>data_people <span class="op">=</span> data_people.dropna(subset <span class="op">=</span> [<span class="st">&#39;debut&#39;</span>])</span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="kw">def</span> check_career(row) :</span>
+<span id="cb1-23"><a href="#cb1-23"></a>  <span class="cf">if</span> <span class="bu">int</span>(<span class="bu">str</span>(row[<span class="st">&#39;finalGame&#39;</span>])[:<span class="dv">4</span>]) <span class="op">&lt;=</span> <span class="dv">1985</span> <span class="kw">or</span> <span class="bu">int</span>(<span class="bu">str</span>(row[<span class="st">&#39;debut&#39;</span>])[:<span class="dv">4</span>]) <span class="op">&gt;=</span> <span class="dv">2016</span>:</span>
+<span id="cb1-24"><a href="#cb1-24"></a>    <span class="cf">return</span> <span class="st">&#39;no&#39;</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a>  <span class="cf">return</span> <span class="st">&#39;yes&#39;</span></span>
+<span id="cb1-26"><a href="#cb1-26"></a></span>
+<span id="cb1-27"><a href="#cb1-27"></a>data_people[<span class="st">&#39;career&#39;</span>] <span class="op">=</span> data_people.<span class="bu">apply</span> (<span class="kw">lambda</span> row: check_career(row), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-28"><a href="#cb1-28"></a>data_people <span class="op">=</span> data_people[data_people[<span class="st">&#39;career&#39;</span>] <span class="op">==</span> <span class="st">&#39;yes&#39;</span>]</span>
+<span id="cb1-29"><a href="#cb1-29"></a></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="co">#Drop unnecessary columns from the people dataframe</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a>data_people <span class="op">=</span> data_people.drop([<span class="st">&#39;birthYear&#39;</span>, <span class="st">&#39;birthMonth&#39;</span>, <span class="st">&#39;birthDay&#39;</span>, </span>
+<span id="cb1-32"><a href="#cb1-32"></a>                                <span class="st">&#39;birthCountry&#39;</span>, <span class="st">&#39;birthState&#39;</span>, <span class="st">&#39;birthCity&#39;</span>, <span class="st">&#39;deathYear&#39;</span>, <span class="st">&#39;deathMonth&#39;</span>, <span class="st">&#39;deathDay&#39;</span>, </span>
+<span id="cb1-33"><a href="#cb1-33"></a>                                <span class="st">&#39;deathCountry&#39;</span>, <span class="st">&#39;deathState&#39;</span>, <span class="st">&#39;deathCity&#39;</span>, <span class="st">&#39;weight&#39;</span>, <span class="st">&#39;height&#39;</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-34"><a href="#cb1-34"></a>data_people <span class="op">=</span> data_people.reset_index()</span></code></pre></div>
 <div class="output stream stderr">
-<pre><code>&lt;ipython-input-1-5ca85491da51&gt;:9: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+<pre><code>&lt;ipython-input-33-294f8a7a23e8&gt;:10: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   data_batting = data_batting[data_batting.yearID &gt;= 1985][data_batting.yearID &lt;= 2016]
-&lt;ipython-input-1-5ca85491da51&gt;:12: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
+&lt;ipython-input-33-294f8a7a23e8&gt;:13: UserWarning: Boolean Series key will be reindexed to match DataFrame index.
   data_pitching = data_pitching[data_pitching.yearID &gt;= 1985][data_pitching.yearID &lt;= 2016]
 </code></pre>
 </div>
@@ -1344,7 +1345,7 @@
 <p>#Data Management and Representation</p>
 <p>Now that we have our data sets loaded into dataframes, we will add some necessary columns to our dataframes that will be instrumental in testing our hypothesis. We will use some graphs to explain why each additional column of the dataframe is necessary.</p>
 </div>
-<div class="cell code" data-execution_count="6" data-colab="{&quot;height&quot;:295,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="dt4HIyeeBUpb" data-outputId="caf123ed-b508-41dd-8c50-d86afa4722d2">
+<div class="cell code" data-execution_count="34" data-colab="{&quot;height&quot;:295,&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}" id="dt4HIyeeBUpb" data-outputId="10a9e530-4b18-4eb1-a9a2-adad8b536cd6">
 <div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Create a bar graph of the total salaries per year</span></span>
 <span id="cb7-2"><a href="#cb7-2"></a></span>
 <span id="cb7-3"><a href="#cb7-3"></a><span class="co">#Create dictionary to stores total payroll as values, and years as keys</span></span>
@@ -1363,7 +1364,8 @@
 <span id="cb7-16"><a href="#cb7-16"></a>plt.ylabel(<span class="st">&quot;Total Salary&quot;</span>)</span>
 <span id="cb7-17"><a href="#cb7-17"></a>plt.xlabel(<span class="st">&quot;Year&quot;</span>)</span>
 <span id="cb7-18"><a href="#cb7-18"></a>plt.title(<span class="st">&quot;Total salary for each year&quot;</span>)</span>
-<span id="cb7-19"><a href="#cb7-19"></a>plt.show()</span></code></pre></div>
+<span id="cb7-19"><a href="#cb7-19"></a>plt.show()</span>
+<span id="cb7-20"><a href="#cb7-20"></a>pio.renderers.default<span class="op">=</span><span class="st">&#39;notebook&#39;</span></span></code></pre></div>
 <div class="output display_data">
 <p><img src="b31571142eb8f293abb27351a1262ae3f72c9b91.png" /></p>
 </div>
